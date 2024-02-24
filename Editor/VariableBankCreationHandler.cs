@@ -10,7 +10,7 @@ namespace com.absence.variablesystem.Editor
     {
         private static readonly string k_createPath = "Assets/Scriptables/VariableBanks";
 
-        [MenuItem("absence/core/variable system/Create Variable Bank", priority = 0)]
+        [MenuItem("absence/absent-variabes/Create Variable Bank", priority = 0)]
         static void CreateVariableBank()
         {
             CreateVariableBankEndNameEditAction create = ScriptableObject.CreateInstance<CreateVariableBankEndNameEditAction>();
