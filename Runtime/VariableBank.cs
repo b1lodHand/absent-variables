@@ -10,10 +10,10 @@ namespace com.absence.variablesystem
     {
         public static readonly string Null = "null: null";
 
-        [SerializeField] protected List<Variable_Integer> Ints = new();
-        [SerializeField] protected List<Variable_Float> Floats = new();
-        [SerializeField] protected List<Variable_String> Strings = new();
-        [SerializeField] protected List<Variable_Boolean> Booleans = new();
+        [SerializeField] public List<Variable_Integer> Ints { get; internal set; } = new();
+        [SerializeField] public List<Variable_Float> Floats { get; internal set; } = new();
+        [SerializeField] public List<Variable_String> Strings { get; internal set; } = new();
+        [SerializeField] public List<Variable_Boolean> Booleans { get; internal set; } = new();
 
         public event Action OnDestroyAction;
 
