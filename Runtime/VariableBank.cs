@@ -10,36 +10,41 @@ namespace com.absence.variablesystem
     {
         public static readonly string Null = "null: null";
 
-        [SerializeField] public List<Variable_Integer> Ints { get; internal set; } = new();
-        [SerializeField] public List<Variable_Float> Floats { get; internal set; } = new();
-        [SerializeField] public List<Variable_String> Strings { get; internal set; } = new();
-        [SerializeField] public List<Variable_Boolean> Booleans { get; internal set; } = new();
+        [SerializeField] protected List<Variable_Integer> m_ints = new();
+        [SerializeField] protected List<Variable_Float> m_floats = new();
+        [SerializeField] protected List<Variable_String> m_strings = new();
+        [SerializeField] protected List<Variable_Boolean> m_booleans = new();
+
+        public List<Variable_Integer> Ints { get { return m_ints; } internal set { m_ints = value; } }
+        public List<Variable_Float> Floats { get { return m_floats; } internal set { m_floats = value; } }
+        public List<Variable_String> Strings { get { return m_strings; } internal set { m_strings = value; } }
+        public List<Variable_Boolean> Booleans { get { return m_booleans; } internal set { m_booleans = value; } }
 
         public event Action OnDestroyAction;
 
         public List<string> GetAllVariableNames()
         {
-            var totalCount = Ints.Count + Floats.Count + Strings.Count + Booleans.Count;
+            var totalCount = m_ints.Count + m_floats.Count + m_strings.Count + m_booleans.Count;
             var result = new List<string>();
             if (totalCount == 0) return result;
 
-            Ints.ConvertAll(v => v.Name).ToList().ForEach(k => result.Add(k));
-            Floats.ConvertAll(v => v.Name).ToList().ForEach(k => result.Add(k));
-            Strings.ConvertAll(v => v.Name).ToList().ForEach(k => result.Add(k));
-            Booleans.ConvertAll(v => v.Name).ToList().ForEach(k => result.Add(k));
+            m_ints.ConvertAll(v => v.Name).ToList().ForEach(k => result.Add(k));
+            m_floats.ConvertAll(v => v.Name).ToList().ForEach(k => result.Add(k));
+            m_strings.ConvertAll(v => v.Name).ToList().ForEach(k => result.Add(k));
+            m_booleans.ConvertAll(v => v.Name).ToList().ForEach(k => result.Add(k));
 
             return result;
         }
         public List<string> GetAllVariableNamesWithTypes()
         {
-            var totalCount = Ints.Count + Floats.Count + Strings.Count + Booleans.Count;
+            var totalCount = m_ints.Count + m_floats.Count + m_strings.Count + m_booleans.Count;
             var result = new List<string>();
             if (totalCount == 0) return result;
 
-            Ints.ConvertAll(v => v.Name).ToList().ForEach(k => result.Add($"int: {k}"));
-            Floats.ConvertAll(v => v.Name).ToList().ForEach(k => result.Add($"float: {k}"));
-            Strings.ConvertAll(v => v.Name).ToList().ForEach(k => result.Add($"string: {k}"));
-            Booleans.ConvertAll(v => v.Name).ToList().ForEach(k => result.Add($"bool: {k}"));
+            m_ints.ConvertAll(v => v.Name).ToList().ForEach(k => result.Add($"int: {k}"));
+            m_floats.ConvertAll(v => v.Name).ToList().ForEach(k => result.Add($"float: {k}"));
+            m_strings.ConvertAll(v => v.Name).ToList().ForEach(k => result.Add($"string: {k}"));
+            m_booleans.ConvertAll(v => v.Name).ToList().ForEach(k => result.Add($"bool: {k}"));
 
             return result;
         }
@@ -48,7 +53,7 @@ namespace com.absence.variablesystem
         {
             variableName = TrimVariableNameType(variableName);
 
-            var check = Ints.Where(v => v.Name == variableName).ToList();
+            var check = m_ints.Where(v => v.Name == variableName).ToList();
             if (check.Count > 0) return check.FirstOrDefault();
             else return null;
         }
@@ -56,7 +61,7 @@ namespace com.absence.variablesystem
         {
             variableName = TrimVariableNameType(variableName);
 
-            var check = Floats.Where(v => v.Name == variableName).ToList();
+            var check = m_floats.Where(v => v.Name == variableName).ToList();
             if (check.Count > 0) return check.FirstOrDefault();
             else return null;
         }
@@ -64,7 +69,7 @@ namespace com.absence.variablesystem
         {
             variableName = TrimVariableNameType(variableName);
 
-            var check = Strings.Where(v => v.Name == variableName).ToList();
+            var check = m_strings.Where(v => v.Name == variableName).ToList();
             if (check.Count > 0) return check.FirstOrDefault();
             else return null;
         }
@@ -72,7 +77,7 @@ namespace com.absence.variablesystem
         {
             variableName = TrimVariableNameType(variableName);
 
-            var check = Booleans.Where(v => v.Name == variableName).ToList();
+            var check = m_booleans.Where(v => v.Name == variableName).ToList();
             if (check.Count > 0) return check.FirstOrDefault();
             else return null;
         }
@@ -81,7 +86,7 @@ namespace com.absence.variablesystem
         {
             variableName = TrimVariableNameType(variableName);
 
-            var found = Ints.Where(v => v.Name == variableName).FirstOrDefault();
+            var found = m_ints.Where(v => v.Name == variableName).FirstOrDefault();
             if(found == null) return false;
 
             found.Value = newValue;
@@ -91,7 +96,7 @@ namespace com.absence.variablesystem
         {
             variableName = TrimVariableNameType(variableName);
 
-            var found = Floats.Where(v => v.Name == variableName).FirstOrDefault();
+            var found = m_floats.Where(v => v.Name == variableName).FirstOrDefault();
             if (found == null) return false;
 
             found.Value = newValue;
@@ -101,7 +106,7 @@ namespace com.absence.variablesystem
         {
             variableName = TrimVariableNameType(variableName);
 
-            var found = Strings.Where(v => v.Name == variableName).FirstOrDefault();
+            var found = m_strings.Where(v => v.Name == variableName).FirstOrDefault();
             if (found == null) return false;
 
             found.Value = newValue;
@@ -111,17 +116,17 @@ namespace com.absence.variablesystem
         {
             variableName = TrimVariableNameType(variableName);
 
-            var found = Booleans.Where(v => v.Name == variableName).FirstOrDefault();
+            var found = m_booleans.Where(v => v.Name == variableName).FirstOrDefault();
             if (found == null) return false;
 
             found.Value = newValue;
             return true;
         }
 
-        public bool HasInt(string variableName) => Ints.Any(v => v.Name == TrimVariableNameType(variableName));
-        public bool HasFloat(string variableName) => Floats.Any(v => v.Name == TrimVariableNameType(variableName));
-        public bool HasString(string variableName) => Strings.Any(v => v.Name == TrimVariableNameType(variableName));
-        public bool HasBoolean(string variableName) => Booleans.Any(v => v.Name == TrimVariableNameType(variableName));
+        public bool HasInt(string variableName) => m_ints.Any(v => v.Name == TrimVariableNameType(variableName));
+        public bool HasFloat(string variableName) => m_floats.Any(v => v.Name == TrimVariableNameType(variableName));
+        public bool HasString(string variableName) => m_strings.Any(v => v.Name == TrimVariableNameType(variableName));
+        public bool HasBoolean(string variableName) => m_booleans.Any(v => v.Name == TrimVariableNameType(variableName));
         public bool HasAny(string variableName)
         {
             return (this.HasInt(variableName) ||
