@@ -105,16 +105,24 @@ namespace com.absence.variablesystem.Editor
 
             bankSelector.RegisterValueChangedCallback(evt =>
             {
+                Undo.RecordObject(property.serializedObject.targetObject, "Variable Setter (Edited)");
+
                 targetBank = m_banks.Where(b => b.name.Equals(bankSelector.value)).FirstOrDefault();
                 bankProp.objectReferenceValue = targetBank;
                 RefreshVarSelector();
+
+                serializedObject.ApplyModifiedProperties();
             });
 
             // register var selector on change.
             variableSelector.RegisterValueChangedCallback(evt =>
             {
+                Undo.RecordObject(property.serializedObject.targetObject, "Variable Setter (Edited)");
+
                 RefreshSetTypeSelector();
                 RefreshValueFields();
+
+                serializedObject.ApplyModifiedProperties();
             });
 
             container.Add(bankSelector);
@@ -304,7 +312,7 @@ namespace com.absence.variablesystem.Editor
             // borrowing needed info from property to draw the rest.
             var targetVariableName = targetVarNameProp.stringValue;
 
-            // drawing set type selectionç
+            // drawing set type selectionÃ§
             if (targetBank != null && (targetBank.HasBoolean(targetVariableName) ||
                                        targetBank.HasString(targetVariableName) ||
                                        targetVariableName == VariableBank.Null))
