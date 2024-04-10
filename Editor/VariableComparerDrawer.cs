@@ -106,7 +106,7 @@ namespace com.absence.variablesystem.Editor
 
             bankSelector.RegisterValueChangedCallback(evt =>
             {
-                targetBank = m_banks.Where(b => b.name.Equals(bankSelector.value)).FirstOrDefault();
+                targetBank = m_banks.Where(b => b.name.Equals((string)evt.newValue)).FirstOrDefault();
                 bankProp.objectReferenceValue = targetBank;
                 RefreshVarSelector();
             });
@@ -306,7 +306,7 @@ namespace com.absence.variablesystem.Editor
             // borrowing needed info from property to draw the rest.
             var targetVariableName = targetVarNameProp.stringValue;
 
-            // drawing set type selectionç
+            // drawing set type selectionÃ§
             if (targetBank != null && (targetBank.HasBoolean(targetVariableName) ||
                                        targetBank.HasString(targetVariableName) ||
                                        targetVariableName == VariableBank.Null))
