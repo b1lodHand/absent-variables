@@ -29,13 +29,13 @@ namespace com.absence.variablesystem.Editor
             container.styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>(StyleSheetPath));
             container.AddToClassList("container");
 
-            DrawGUI(container, false, property);
+            DrawGUI(container, property);
 
             root.Add(container);
             return root;
         }
 
-        protected virtual VisualElement DrawGUI(VisualElement container, bool hasBankSelectorProp, SerializedProperty property)
+        protected virtual VisualElement DrawGUI(VisualElement container, SerializedProperty property)
         {
             // get serialized object.
             var serializedObject = property.serializedObject;
@@ -67,7 +67,11 @@ namespace com.absence.variablesystem.Editor
             DropdownField bankSelector = new DropdownField(m_banks.ConvertAll(b => b.name), 0);
             bankSelector.name = "bank";
             bankSelector.AddToClassList("bankSelector");
-            if (bankProp.objectReferenceValue != null) bankSelector.SetValueWithoutNotify(bankProp.objectReferenceValue.name);
+            if (bankProp.objectReferenceValue != null)
+            {
+                bankSelector.SetValueWithoutNotify(bankProp.objectReferenceValue.name);
+                targetBank = bankProp.objectReferenceValue as VariableBank;
+            }
 
             // instantiate selector for variable.
             DropdownField variableSelector = new DropdownField(new List<string>() { VariableBank.Null }, 0);
@@ -106,16 +110,24 @@ namespace com.absence.variablesystem.Editor
 
             bankSelector.RegisterValueChangedCallback(evt =>
             {
-                targetBank = m_banks.Where(b => b.name.Equals((string)evt.newValue)).FirstOrDefault();
+                Undo.RecordObject(property.serializedObject.targetObject, "Variable Comparer (Edited)");
+
+                targetBank = m_banks.Where(b => b.name == (string)evt.newValue).FirstOrDefault();
                 bankProp.objectReferenceValue = targetBank;
                 RefreshVarSelector();
+
+                serializedObject.ApplyModifiedProperties();
             });
 
             // register var selector on change.
             variableSelector.RegisterValueChangedCallback(evt =>
             {
+                Undo.RecordObject(property.serializedObject.targetObject, "Variable Comparer (Edited)");
+
                 RefreshCompSelector();
                 RefreshValueFields();
+
+                serializedObject.ApplyModifiedProperties();
             });
 
             container.Add(bankSelector);
@@ -123,8 +135,12 @@ namespace com.absence.variablesystem.Editor
             container.Add(setTypeSelector);
 
             // refresh all of them.
-            targetBank = m_banks.Where(b => b.name.Equals(bankSelector.value)).FirstOrDefault();
-            bankProp.objectReferenceValue = targetBank;
+            if(bankProp.objectReferenceValue == null)
+            {
+                targetBank = m_banks.Where(b => b.name.Equals(bankSelector.value)).FirstOrDefault();
+                bankProp.objectReferenceValue = targetBank;
+            }
+
             RefreshVarSelector();
             RefreshCompSelector();
             RefreshValueFields();
@@ -214,7 +230,7 @@ namespace com.absence.variablesystem.Editor
 
             // undo redo stuff.
             EditorGUI.BeginChangeCheck();
-            Undo.RecordObject(property.serializedObject.targetObject, "Variable Setter (Edited)");
+            Undo.RecordObject(property.serializedObject.targetObject, "Variable Comparer (Edited)");
 
             DrawIMGUI(position, property);
 
