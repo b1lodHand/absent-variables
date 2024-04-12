@@ -32,14 +32,12 @@ namespace com.absence.variablesystem.Editor
                 AssetDatabase.CreateAsset(itemCreated, pathName);
                 itemCreated.OnDestroyAction += () =>
                 {
-                    VariableSetterDrawer.RefreshBanks();
-                    VariableComparerDrawer.RefreshBanks();
+                    VariableBankDatabase.Refresh();
                 };
 
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
-                VariableSetterDrawer.RefreshBanks();
-                VariableComparerDrawer.RefreshBanks();
+                VariableBankDatabase.Refresh();
 
                 Selection.activeObject = itemCreated;
             }
