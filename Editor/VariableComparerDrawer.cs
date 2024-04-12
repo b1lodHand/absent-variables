@@ -11,7 +11,6 @@ namespace com.absence.variablesystem.Editor
     public class VariableComparerDrawer : PropertyDrawer
     {
         protected static readonly string StyleSheetPath = "Packages/com.absence.variablesystem/Editor/uss/VariableComparer.uss";
-        static List<VariableBank> m_banks = new List<VariableBank>();
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
@@ -53,9 +52,9 @@ namespace com.absence.variablesystem.Editor
             VariableBank targetBank = null;
 
             // refresh banks.
-            RefreshBanks();
+            VariableBankDatabase.Refresh();
 
-            if (m_banks.Count == 0)
+            if (VariableBankDatabase.NoBanks)
             {
                 HelpBox noBanksHelpBox = new HelpBox("There are no VariableBanks in your project. Create at least one to continue.", HelpBoxMessageType.Error);
                 container.Clear();
@@ -64,7 +63,7 @@ namespace com.absence.variablesystem.Editor
             }
 
             // instantiate selector for bank.
-            DropdownField bankSelector = new DropdownField(m_banks.ConvertAll(b => b.name), 0);
+            DropdownField bankSelector = new DropdownField(VariableBankDatabase.GetBankNameList(), 0);
             bankSelector.name = "bank";
             bankSelector.AddToClassList("bankSelector");
             if (bankProp.objectReferenceValue != null)
@@ -112,7 +111,7 @@ namespace com.absence.variablesystem.Editor
             {
                 Undo.RecordObject(property.serializedObject.targetObject, "Variable Comparer (Edited)");
 
-                targetBank = m_banks.Where(b => b.name == (string)evt.newValue).FirstOrDefault();
+                targetBank = VariableBankDatabase.GetBankIfExists(evt.newValue);
                 bankProp.objectReferenceValue = targetBank;
                 RefreshVarSelector();
 
@@ -137,7 +136,7 @@ namespace com.absence.variablesystem.Editor
             // refresh all of them.
             if(bankProp.objectReferenceValue == null)
             {
-                targetBank = m_banks.Where(b => b.name.Equals(bankSelector.value)).FirstOrDefault();
+                targetBank = VariableBankDatabase.GetBankIfExists(bankSelector.value);
                 bankProp.objectReferenceValue = targetBank;
             }
 
@@ -297,17 +296,19 @@ namespace com.absence.variablesystem.Editor
 
             if (Event.current.type != EventType.Repaint)
             {
-                RefreshBanks();
+                VariableBankDatabase.Refresh();
             }
 
-            if (m_banks.Count == 0)
+            if (VariableBankDatabase.NoBanks)
             {
                 EditorGUILayout.HelpBox("There are no VariableBanks in your project. Create at least one to continue.", MessageType.Error);
                 return;
             }
 
-            var selectedBankIndex = EditorGUI.Popup(bankSelectorRect, bankProp.objectReferenceValue != null ? m_banks.IndexOf(bankProp.objectReferenceValue as VariableBank) : 0, m_banks.ConvertAll(b => b.name).ToArray());
-            targetBank = m_banks[selectedBankIndex];
+            List<VariableBank> banks = VariableBankDatabase.Banks;
+
+            var selectedBankIndex = EditorGUI.Popup(bankSelectorRect, bankProp.objectReferenceValue != null ? banks.IndexOf(bankProp.objectReferenceValue as VariableBank) : 0, VariableBankDatabase.GetBankNameList().ToArray());
+            targetBank = banks[selectedBankIndex];
             bankProp.objectReferenceValue = targetBank;
 
             List<string> allNamesWithTypes = new List<string> { VariableBank.Null };
@@ -322,7 +323,7 @@ namespace com.absence.variablesystem.Editor
             // borrowing needed info from property to draw the rest.
             var targetVariableName = targetVarNameProp.stringValue;
 
-            // drawing set type selectionÃ§
+            // drawing set type selectionç
             if (targetBank != null && (targetBank.HasBoolean(targetVariableName) ||
                                        targetBank.HasString(targetVariableName) ||
                                        targetVariableName == VariableBank.Null))
@@ -348,14 +349,6 @@ namespace com.absence.variablesystem.Editor
                 else if (targetBank.HasBoolean(targetVariableName))
                     boolValueProp.boolValue = EditorGUI.Toggle(actualValueRect, boolValueProp.boolValue);
             }
-        }
-
-        public static void RefreshBanks()
-        {
-            m_banks = AssetDatabase.FindAssets("t:VariableBank").ToList().ConvertAll(foundGuid =>
-            {
-                return AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(foundGuid), typeof(VariableBank)) as VariableBank;
-            });
         }
     }
 
