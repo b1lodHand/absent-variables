@@ -314,7 +314,7 @@ namespace com.absence.variablesystem.Editor
             // borrowing needed info from property to draw the rest.
             var targetVariableName = targetVarNameProp.stringValue;
 
-            // drawing set type selectionç
+            // drawing set type selectionÃ§
             if (targetBank != null && (targetBank.HasBoolean(targetVariableName) ||
                                        targetBank.HasString(targetVariableName) ||
                                        targetVariableName == VariableBank.Null))
@@ -323,7 +323,7 @@ namespace com.absence.variablesystem.Editor
                 setTypeProp.enumValueIndex = (int)(VariableSetter.SetType.SetTo);
             }
 
-            EditorGUI.EnumPopup(setTypeSelectorRect, (VariableSetter.SetType)setTypeProp.enumValueIndex);
+            setTypeProp.enumValueIndex = (int)((VariableSetter.SetType)(EditorGUI.EnumPopup(setTypeSelectorRect, (VariableSetter.SetType)setTypeProp.enumValueIndex)));
 
             // re-enabling the editor.
             GUI.enabled = true;
