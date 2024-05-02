@@ -314,7 +314,7 @@ namespace com.absence.variablesystem.Editor
             // borrowing needed info from property to draw the rest.
             var targetVariableName = targetVarNameProp.stringValue;
 
-            // drawing set type selectionÃ§
+            // drawing set type selectionç
             if (targetBank != null && (targetBank.HasBoolean(targetVariableName) ||
                                        targetBank.HasString(targetVariableName) ||
                                        targetVariableName == VariableBank.Null))

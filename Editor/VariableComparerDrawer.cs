@@ -134,7 +134,7 @@ namespace com.absence.variablesystem.Editor
             container.Add(setTypeSelector);
 
             // refresh all of them.
-            if(bankProp.objectReferenceValue == null)
+            if (bankProp.objectReferenceValue == null)
             {
                 targetBank = VariableBankDatabase.GetBankIfExists(bankSelector.value);
                 bankProp.objectReferenceValue = targetBank;
@@ -216,6 +216,7 @@ namespace com.absence.variablesystem.Editor
                 comparisonSelector.SetEnabled(false);
             }
         }
+
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             // needed stuff.
@@ -323,7 +324,7 @@ namespace com.absence.variablesystem.Editor
             // borrowing needed info from property to draw the rest.
             var targetVariableName = targetVarNameProp.stringValue;
 
-            // drawing set type selectionÃ§
+            // drawing set type selectionç
             if (targetBank != null && (targetBank.HasBoolean(targetVariableName) ||
                                        targetBank.HasString(targetVariableName) ||
                                        targetVariableName == VariableBank.Null))
