@@ -5,12 +5,21 @@ using UnityEngine;
 
 namespace com.absence.variablesystem
 {
+    /// <summary>
+    /// The very base class of whole system. Needed because of the serialization limitations
+    /// of unity on generic types.
+    /// </summary>
     [System.Serializable]
     public abstract class Variable
     {
 
     }
 
+    /// <summary>
+    /// The base class for any type of variable. You can override the effect of mutators by deriving this class. Or you can
+    /// use it diretly as a generic class.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class Variable<T> : Variable
     {
         protected event Action<VariableValueChangedCallbackContext<T>> m_onValueChanged;
@@ -37,19 +46,32 @@ namespace com.absence.variablesystem
 
         protected List<Mutation<T>> m_mutations  = new List<Mutation<T>>();
 
+        /// <summary>
+        /// Mutate this variable.
+        /// </summary>
+        /// <param name="mutation"></param>
         public void AddMutation(Mutation<T> mutation)
         {
             RevertMutations();
             m_mutations.Add(mutation);
             ApplyMutations();
         }
+
+        /// <summary>
+        /// Remove a specific mutation from this variable.
+        /// </summary>
+        /// <param name="mutation"></param>
         public void RemoveMutation(Mutation<T> mutation)
         {
             RevertMutations();
             if(m_mutations.Contains(mutation)) m_mutations.Remove(mutation);
             ApplyMutations();
         }
-        public void ClearMutators()
+
+        /// <summary>
+        /// Clear all of the mutations on this variable.
+        /// </summary>
+        public void ClearMutationa()
         {
             RevertMutations();
             m_mutations.Clear();
@@ -59,10 +81,19 @@ namespace com.absence.variablesystem
         protected abstract void RevertMutations();
         protected abstract void ApplyMutations();
 
+        /// <summary>
+        /// Get notified when the value of this variable changes.
+        /// </summary>
+        /// <param name="evt"></param>
         public void AddValueChangeListener(Action<VariableValueChangedCallbackContext<T>> evt)
         {
             m_onValueChanged += evt;
         }
+
+        /// <summary>
+        /// Remove the notification you've added.
+        /// </summary>
+        /// <param name="evt"></param>
         public void RemoveValueChangeListener(Action<VariableValueChangedCallbackContext<T>> evt)
         {
             m_onValueChanged -= evt;
@@ -212,6 +243,10 @@ namespace com.absence.variablesystem
         }
     }
 
+    /// <summary>
+    /// Used for the event system of variables.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class VariableValueChangedCallbackContext<T>
     {
         public T previousValue { get; set; }

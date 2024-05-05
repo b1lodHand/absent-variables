@@ -17,7 +17,7 @@ namespace com.absence.variablesystem
         }
 
         [SerializeField] protected ComparisonType m_comparisonType = ComparisonType.EqualsTo;
-        [SerializeField] protected VariableBank m_targetBank;
+        [SerializeField] public VariableBank m_targetBank;
         [SerializeField] protected string m_targetVariableName = VariableBank.Null;
 
         [SerializeField] protected int m_intValue;
