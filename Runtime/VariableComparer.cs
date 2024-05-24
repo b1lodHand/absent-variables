@@ -1,5 +1,6 @@
 ﻿
 using UnityEngine;
+using static com.absence.variablesystem.VariableSetter;
 
 namespace com.absence.variablesystem
 {
@@ -79,6 +80,23 @@ namespace com.absence.variablesystem
                 default:
                     return false;
             }
+        }
+
+        public VariableComparer Clone(VariableBank overrideBank)
+        {
+            VariableComparer clone = new();
+
+            clone.m_boolValue = m_boolValue;
+            clone.m_floatValue = m_floatValue;
+            clone.m_intValue = m_intValue;
+            clone.m_stringValue = m_stringValue;
+
+            clone.m_comparisonType = m_comparisonType;
+            clone.m_targetVariableName = m_targetVariableName;
+
+            clone.m_targetBank = overrideBank;
+
+            return clone;
         }
     }
 }
