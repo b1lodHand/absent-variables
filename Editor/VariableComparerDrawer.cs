@@ -2,8 +2,8 @@ using UnityEditor;
 using UnityEngine;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace com.absence.variablesystem.Editor
 {
@@ -41,6 +41,7 @@ namespace com.absence.variablesystem.Editor
 
             var comparisonProp = property.FindPropertyRelative("m_comparisonType");
             var bankProp = property.FindPropertyRelative("m_targetBank");
+            var fixedBankProp = property.FindPropertyRelative("m_fixedBank");
             var targetVarNameProp = property.FindPropertyRelative("m_targetVariableName");
 
             var intValueProp = property.FindPropertyRelative("m_intValue");
@@ -66,7 +67,13 @@ namespace com.absence.variablesystem.Editor
             DropdownField bankSelector = new DropdownField(VariableBankDatabase.GetBankNameList(), 0);
             bankSelector.name = "bank";
             bankSelector.AddToClassList("bankSelector");
-            if (bankProp.objectReferenceValue != null)
+            if (fixedBankProp.objectReferenceValue != null)
+            {
+                targetBank = fixedBankProp.objectReferenceValue as VariableBank;
+                bankProp.objectReferenceValue = targetBank;
+            }
+
+            else if (bankProp.objectReferenceValue != null)
             {
                 bankSelector.SetValueWithoutNotify(bankProp.objectReferenceValue.name);
                 targetBank = bankProp.objectReferenceValue as VariableBank;
@@ -129,7 +136,7 @@ namespace com.absence.variablesystem.Editor
                 serializedObject.ApplyModifiedProperties();
             });
 
-            container.Add(bankSelector);
+            if(fixedBankProp.objectReferenceValue == null) container.Add(bankSelector);
             container.Add(variableSelector);
             container.Add(setTypeSelector);
 
@@ -254,6 +261,7 @@ namespace com.absence.variablesystem.Editor
 
             var comparisonProp = property.FindPropertyRelative("m_comparisonType");
             var bankProp = property.FindPropertyRelative("m_targetBank");
+            var fixedBankProp = property.FindPropertyRelative("m_fixedBank");
             var targetVarNameProp = property.FindPropertyRelative("m_targetVariableName");
 
             var intValueProp = property.FindPropertyRelative("m_intValue");
@@ -262,34 +270,36 @@ namespace com.absence.variablesystem.Editor
             var boolValueProp = property.FindPropertyRelative("m_boolValue");
 
             #region rect stuff.
-            // rect variables.
-            var horizontalPointer = position.x;
-            var horizontalSpace = 5f;
-            var bankSelectorWidth = 80f;
-            var variableSelectorWidth = 100f;
-            var setTypeSelectorWidth = 30f;
-            var actualValueWidth = 50f;
+            Rect bankSelectorRect = position;
+            Rect variableSelectorRect;
+            Rect setTypeSelectorRect;
+            Rect actualValueRect;
 
-            var bankSelectorRect = new Rect(horizontalPointer, position.y, bankSelectorWidth, position.height);
+            if(fixedBankProp.objectReferenceValue == null)
+            {
+                const float k_bankSelector = 8f;
+                const float k_varSelector = 10f;
+                const float k_setTypeSelector = 3f;
+                const float k_actualValue = 5f;
 
-            horizontalPointer += bankSelectorWidth;
-            horizontalPointer += horizontalSpace;
+                Rect[] rects = Helpers.SliceRectHorizontally(position, 4, Constants.K_SPACING, 0f, k_bankSelector, k_varSelector, k_setTypeSelector, k_actualValue);
+                bankSelectorRect = rects[0];
+                variableSelectorRect = rects[1];
+                setTypeSelectorRect = rects[2];
+                actualValueRect = rects[3];
+            }
 
-            var variableSelectorRect = new Rect(horizontalPointer, position.y, variableSelectorWidth, position.height);
+            else
+            {
+                const float k_varSelectorFixed = 7f;
+                const float k_setTypeSelectorFixed = 1f;
+                const float k_actualValueFixed = 5f;
 
-            horizontalPointer += variableSelectorWidth;
-            horizontalPointer += horizontalSpace;
-
-            var setTypeSelectorRect = new Rect(horizontalPointer, position.y, setTypeSelectorWidth, position.height);
-
-            horizontalPointer += setTypeSelectorWidth;
-            horizontalPointer += horizontalSpace;
-
-            // some calcs to expand the area of actual value field.
-            var rest = position.width - horizontalPointer;
-            actualValueWidth = rest > 0f ? rest : actualValueWidth;
-
-            var actualValueRect = new Rect(horizontalPointer, position.y, actualValueWidth, position.height);
+                Rect[] rects = Helpers.SliceRectHorizontally(position, 3, Constants.K_SPACING, 0f, k_varSelectorFixed, k_setTypeSelectorFixed, k_actualValueFixed);
+                variableSelectorRect = rects[0];
+                setTypeSelectorRect = rects[1];
+                actualValueRect = rects[2];
+            }
             #endregion
 
             // declare needed variables.
@@ -308,9 +318,19 @@ namespace com.absence.variablesystem.Editor
 
             List<VariableBank> banks = VariableBankDatabase.Banks;
 
-            var selectedBankIndex = EditorGUI.Popup(bankSelectorRect, bankProp.objectReferenceValue != null ? banks.IndexOf(bankProp.objectReferenceValue as VariableBank) : 0, VariableBankDatabase.GetBankNameList().ToArray());
-            targetBank = banks[selectedBankIndex];
-            bankProp.objectReferenceValue = targetBank;
+            if(fixedBankProp.objectReferenceValue == null)
+            {
+                var selectedBankIndex = EditorGUI.Popup(bankSelectorRect, bankProp.objectReferenceValue != null ? banks.IndexOf(bankProp.objectReferenceValue as VariableBank) : 0, VariableBankDatabase.GetBankNameList().ToArray());
+                targetBank = banks[selectedBankIndex];
+                bankProp.objectReferenceValue = targetBank;
+            }
+
+            else
+            {
+                targetBank = fixedBankProp.objectReferenceValue as VariableBank;
+                bankProp.objectReferenceValue = targetBank;
+            }
+            
 
             List<string> allNamesWithTypes = new List<string> { VariableBank.Null };
 
