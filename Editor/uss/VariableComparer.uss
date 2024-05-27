@@ -2,22 +2,25 @@
 	flex-direction: row;
 	align-items: flex-start;
 	align-self: stretch;
-	flex-shrink: 1;
-	max-width: 300px;
+	padding-right: 10
 }
 
 .bankSelector {
-	max-width: 80px;
+	flex-shrink: 4;
+	flex-grow: 1;
 }
 
 .varSelector {
-	max-width: 100px;
+	flex-shrink: 4;
+	flex-grow: 1;
 }
 
 .compSelector {
-	max-width: 30px;
+	flex-shrink: 6;
+	flex-grow: 1;
 }
 
 .valueField {
-	max-width: 50px;
+	flex-shrink: 4;
+	flex-grow: 1;
 }
