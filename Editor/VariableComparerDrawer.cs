@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace com.absence.variablesystem.Editor
 {
-    [CustomPropertyDrawer(typeof(VariableComparer), true)]
+    [CustomPropertyDrawer(typeof(BaseVariableComparer), true)]
     public class VariableComparerDrawer : PropertyDrawer
     {
         protected static readonly string StyleSheetPath = "Packages/com.absence.variablesystem/Editor/uss/VariableComparer.uss";

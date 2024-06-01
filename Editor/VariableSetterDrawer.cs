@@ -6,7 +6,7 @@ using UnityEditor.UIElements;
 
 namespace com.absence.variablesystem.Editor
 {
-    [CustomPropertyDrawer(typeof(VariableSetter), true)]
+    [CustomPropertyDrawer(typeof(BaseVariableSetter), true)]
     public class VariableSetterDrawer : PropertyDrawer
     {
         protected static readonly string StyleSheetPath = "Packages/com.absence.variablesystem/Editor/uss/VariableSetter.uss";
