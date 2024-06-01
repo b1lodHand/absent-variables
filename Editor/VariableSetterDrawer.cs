@@ -70,8 +70,9 @@ namespace com.absence.variablesystem.Editor
             if (!setter.HasFixedBank)
             {
                 bankSelector.SetValueWithoutNotify(bankProp.objectReferenceValue.name);
-                targetBank = bankProp.objectReferenceValue as VariableBank;
             }
+
+            targetBank = bankProp.objectReferenceValue as VariableBank;
 
             // instantiate selector for variable.
             DropdownField variableSelector = new DropdownField(new List<string>() { VariableBank.Null }, 0);
@@ -311,6 +312,11 @@ namespace com.absence.variablesystem.Editor
                 var selectedBankIndex = EditorGUI.Popup(bankSelectorRect, bankProp.objectReferenceValue != null ? banks.IndexOf(bankProp.objectReferenceValue as VariableBank) : 0, VariableBankDatabase.GetBankNameList().ToArray());
                 targetBank = banks[selectedBankIndex];
                 bankProp.objectReferenceValue = targetBank;
+            }
+
+            else
+            {
+                targetBank = bankProp.objectReferenceValue as VariableBank;
             }
 
             List<string> allNamesWithTypes = new List<string> { VariableBank.Null };
