@@ -115,7 +115,7 @@ namespace com.absence.variablesystem
             }
         }
 
-        public VariableSetter Clone(VariableBank overrideBank)
+        public virtual VariableSetter Clone(VariableBank overrideBank)
         {
             VariableSetter clone = new();
 

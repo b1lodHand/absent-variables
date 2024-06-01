@@ -102,7 +102,7 @@ namespace com.absence.variablesystem
         /// </summary>
         /// <param name="overrideBank">New bank to use with the clone.</param>
         /// <returns>Returns a clone comparer which has the same values with the original.</returns>
-        public VariableComparer Clone(VariableBank overrideBank)
+        public virtual VariableComparer Clone(VariableBank overrideBank)
         {
             VariableComparer clone = new();
 
