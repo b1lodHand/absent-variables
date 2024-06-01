@@ -24,7 +24,7 @@ namespace com.absence.variablesystem
         [SerializeField] protected string m_stringValue;
         [SerializeField] protected bool m_boolValue;
 
-        [SerializeField] protected VariableBank m_fixedBank = null;
+        public virtual bool HasFixedBank => false;
 
         public virtual bool GetResult()
         {
@@ -92,13 +92,8 @@ namespace com.absence.variablesystem
         /// <param name="fixedBank"></param>
         public void SetFixedBank(VariableBank fixedBank)
         {
-            if(fixedBank == null)
-            {
-                m_fixedBank = null;
-                return;
-            }
+            if (!HasFixedBank) return;
 
-            m_fixedBank = fixedBank;
             m_targetBank = fixedBank;
         }
 

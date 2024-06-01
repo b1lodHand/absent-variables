@@ -39,8 +39,8 @@ namespace com.absence.variablesystem.Editor
 
             var setTypeProp = property.FindPropertyRelative("m_setType");
             var bankProp = property.FindPropertyRelative("m_targetBank");
-            var fixedBankProp = property.FindPropertyRelative("m_fixedBank");
             var targetVarNameProp = property.FindPropertyRelative("m_targetVariableName");
+            VariableComparer comparer = (VariableComparer)property.boxedValue;
 
             var intValueProp = property.FindPropertyRelative("m_intValue");
             var floatValueProp = property.FindPropertyRelative("m_floatValue");
@@ -66,13 +66,8 @@ namespace com.absence.variablesystem.Editor
             DropdownField bankSelector = new DropdownField(VariableBankDatabase.GetBankNameList(), 0);
             bankSelector.name = "bank";
             bankSelector.AddToClassList("bankSelector");
-            if (fixedBankProp.objectReferenceValue != null)
-            {
-                targetBank = fixedBankProp.objectReferenceValue as VariableBank;
-                bankProp.objectReferenceValue = targetBank;
-            }
 
-            else if (bankProp.objectReferenceValue != null)
+            if (!comparer.HasFixedBank)
             {
                 bankSelector.SetValueWithoutNotify(bankProp.objectReferenceValue.name);
                 targetBank = bankProp.objectReferenceValue as VariableBank;
@@ -135,7 +130,7 @@ namespace com.absence.variablesystem.Editor
                 serializedObject.ApplyModifiedProperties();
             });
 
-            if(fixedBankProp.objectReferenceValue == null) container.Add(bankSelector);
+            if(!comparer.HasFixedBank) container.Add(bankSelector);
             container.Add(variableSelector);
             container.Add(setTypeSelector);
 
@@ -254,8 +249,8 @@ namespace com.absence.variablesystem.Editor
 
             var setTypeProp = property.FindPropertyRelative("m_setType");
             var bankProp = property.FindPropertyRelative("m_targetBank");
-            var fixedBankProp = property.FindPropertyRelative("m_fixedBank");
             var targetVarNameProp = property.FindPropertyRelative("m_targetVariableName");
+            VariableComparer comparer = (VariableComparer)property.boxedValue;
 
             var intValueProp = property.FindPropertyRelative("m_intValue");
             var floatValueProp = property.FindPropertyRelative("m_floatValue");
@@ -268,7 +263,7 @@ namespace com.absence.variablesystem.Editor
             Rect setTypeSelectorRect;
             Rect actualValueRect;
 
-            if (fixedBankProp.objectReferenceValue == null)
+            if (!comparer.HasFixedBank)
             {
                 const float k_bankSelector = 8f;
                 const float k_varSelector = 10f;
@@ -311,16 +306,10 @@ namespace com.absence.variablesystem.Editor
 
             List<VariableBank> banks = VariableBankDatabase.Banks;
 
-            if (fixedBankProp.objectReferenceValue == null)
+            if (!comparer.HasFixedBank)
             {
                 var selectedBankIndex = EditorGUI.Popup(bankSelectorRect, bankProp.objectReferenceValue != null ? banks.IndexOf(bankProp.objectReferenceValue as VariableBank) : 0, VariableBankDatabase.GetBankNameList().ToArray());
                 targetBank = banks[selectedBankIndex];
-                bankProp.objectReferenceValue = targetBank;
-            }
-
-            else
-            {
-                targetBank = fixedBankProp.objectReferenceValue as VariableBank;
                 bankProp.objectReferenceValue = targetBank;
             }
 
