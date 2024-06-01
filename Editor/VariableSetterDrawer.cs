@@ -40,7 +40,7 @@ namespace com.absence.variablesystem.Editor
             var setTypeProp = property.FindPropertyRelative("m_setType");
             var bankProp = property.FindPropertyRelative("m_targetBank");
             var targetVarNameProp = property.FindPropertyRelative("m_targetVariableName");
-            VariableSetter setter = (VariableSetter)property.boxedValue;
+            BaseVariableSetter setter = (BaseVariableSetter)property.boxedValue;
 
             var intValueProp = property.FindPropertyRelative("m_intValue");
             var floatValueProp = property.FindPropertyRelative("m_floatValue");
@@ -251,7 +251,7 @@ namespace com.absence.variablesystem.Editor
             var setTypeProp = property.FindPropertyRelative("m_setType");
             var bankProp = property.FindPropertyRelative("m_targetBank");
             var targetVarNameProp = property.FindPropertyRelative("m_targetVariableName");
-            VariableSetter setter = (VariableSetter)property.boxedValue;
+            BaseVariableSetter setter = (BaseVariableSetter)property.boxedValue;
 
             var intValueProp = property.FindPropertyRelative("m_intValue");
             var floatValueProp = property.FindPropertyRelative("m_floatValue");

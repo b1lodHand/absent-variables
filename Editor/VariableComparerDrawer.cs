@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace com.absence.variablesystem.Editor
 {
@@ -42,7 +41,7 @@ namespace com.absence.variablesystem.Editor
             var comparisonProp = property.FindPropertyRelative("m_comparisonType");
             var bankProp = property.FindPropertyRelative("m_targetBank");
             var targetVarNameProp = property.FindPropertyRelative("m_targetVariableName");
-            VariableComparer comparer = (VariableComparer)property.boxedValue;
+            BaseVariableComparer comparer = (BaseVariableComparer)property.boxedValue;
 
             var intValueProp = property.FindPropertyRelative("m_intValue");
             var floatValueProp = property.FindPropertyRelative("m_floatValue");
@@ -254,7 +253,7 @@ namespace com.absence.variablesystem.Editor
         {
             // get serialized object.
             var serializedObject = property.serializedObject;
-            VariableComparer comparer = (VariableComparer)property.boxedValue;
+            BaseVariableComparer comparer = (BaseVariableComparer)property.boxedValue;
 
             var comparisonProp = property.FindPropertyRelative("m_comparisonType");
             var bankProp = property.FindPropertyRelative("m_targetBank");
