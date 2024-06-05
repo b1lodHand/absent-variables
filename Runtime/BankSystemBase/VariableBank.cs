@@ -1,3 +1,4 @@
+using com.absence.variablesystem.imported;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace com.absence.variablesystem
         /// </summary>
         public const string Null = "null: null";
 
-        [SerializeField, Tooltip("Guid of this bank.")] 
+        [SerializeField, Readonly, Tooltip("Guid of this bank.")] 
         private string m_guid = System.Guid.NewGuid().ToString();
 
         /// <summary>
@@ -23,7 +24,7 @@ namespace com.absence.variablesystem
         /// </summary>
         public string Guid => m_guid;
 
-        [SerializeField, Tooltip("If true, this bank won't get cloned in the startup and also will not get shown on the variable bank name lists.")] 
+        [SerializeField, Readonly, Tooltip("If true, this bank won't get cloned in the startup and also will not get shown on the variable bank name lists.")] 
         private bool m_forExternalUse = false;
 
         /// <summary>
