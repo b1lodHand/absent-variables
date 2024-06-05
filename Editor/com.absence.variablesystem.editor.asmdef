@@ -1,0 +1,18 @@
+{
+    "name": "com.absence.variablesystem.editor",
+    "rootNamespace": "com.absence.variablesystem.editor",
+    "references": [
+        "GUID:6f13bc9fc4dde9a42a625661a793fd37"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
