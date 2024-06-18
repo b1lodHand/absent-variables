@@ -11,6 +11,7 @@ namespace com.absence.variablesystem
     /// use it diretly as a generic class.
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    [System.Serializable]
     public abstract class Variable<T> : VariableBase
     {
         protected event Action<VariableValueChangedCallbackContext<T>> m_onValueChanged;
@@ -33,6 +34,17 @@ namespace com.absence.variablesystem
                 m_onValueChanged?.Invoke(context);
                 m_value = value;
             }
+        }
+
+
+        public Variable()
+        {
+            this.m_name = string.Empty;
+        }
+        public Variable(string name, T value)
+        {
+            this.m_name = name;
+            this.m_value = value;
         }
 
         protected List<Mutation<T>> m_mutations  = new List<Mutation<T>>();

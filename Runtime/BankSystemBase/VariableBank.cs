@@ -54,22 +54,74 @@ namespace com.absence.variablesystem
         /// <summary>
         /// All of the integer variables within this bank.
         /// </summary>
-        public List<Variable_Integer> Ints { get { return m_ints; } private set { m_ints = value; } }
+        public List<Variable_Integer> Ints 
+        { 
+            get 
+            { 
+                return m_ints; 
+            } 
+
+            set 
+            {
+                if (!IsClone) throw new Exception("non-clone banks' lists are immutable.");
+
+                m_ints = value;
+            } 
+        }
 
         /// <summary>
         /// All of the floating point variables within this bank.
         /// </summary>
-        public List<Variable_Float> Floats { get { return m_floats; } private set { m_floats = value; } }
+        public List<Variable_Float> Floats
+        {
+            get
+            {
+                return m_floats;
+            }
+
+            set
+            {
+                if (!IsClone) throw new Exception("non-clone banks' lists are immutable.");
+
+                m_floats = value;
+            }
+        }
 
         /// <summary>
         /// All of the string variables within this bank.
         /// </summary>
-        public List<Variable_String> Strings { get { return m_strings; } private set { m_strings = value; } }
+        public List<Variable_String> Strings
+        {
+            get
+            {
+                return m_strings;
+            }
+
+            set
+            {
+                if (!IsClone) throw new Exception("non-clone banks' lists are immutable.");
+
+                m_strings = value;
+            }
+        }
 
         /// <summary>
         /// All of the boolean variables within this bank.
         /// </summary>
-        public List<Variable_Boolean> Booleans { get { return m_booleans; } private set { m_booleans = value; } }
+        public List<Variable_Boolean> Booleans
+        {
+            get
+            {
+                return m_booleans;
+            }
+
+            set
+            {
+                if (!IsClone) throw new Exception("non-clone banks' lists are immutable.");
+
+                m_booleans = value;
+            }
+        }
 
         /// <summary>
         /// The action gets invoked when this bank gets destroyed.

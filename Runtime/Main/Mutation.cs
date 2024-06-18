@@ -4,6 +4,7 @@ namespace com.absence.variablesystem.mutations
     /// Used for changing a variable's value with a reference on that change. With this, you can revert any of your changes after in game.
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    [System.Serializable]
     public class Mutation<T>
     {
         public MutationType MutationType { get; private set; }

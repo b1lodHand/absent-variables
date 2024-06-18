@@ -7,6 +7,12 @@ namespace com.absence.variablesystem
     [System.Serializable]
     public class Variable_Integer : Variable<int>
     {
+        public Variable_Integer() { }
+
+        public Variable_Integer(string name, int value) : base(name, value)
+        {
+        }
+
         protected override void RevertMutations()
         {
             if (m_mutations.Count == 0) return;
@@ -55,6 +61,12 @@ namespace com.absence.variablesystem
     [System.Serializable]
     public class Variable_Float : Variable<float>
     {
+        public Variable_Float() : base() { }
+
+        public Variable_Float(string name, float value) : base(name, value)
+        {
+        }
+
         protected override void RevertMutations()
         {
             var value = Value;
@@ -122,6 +134,12 @@ namespace com.absence.variablesystem
     [System.Serializable]
     public class Variable_String : Variable<string>
     {
+        public Variable_String() : base() { }
+
+        public Variable_String(string name, string value) : base(name, value) 
+        {
+        }
+
         protected override void ApplyMutations()
         {
 
@@ -136,6 +154,12 @@ namespace com.absence.variablesystem
     [System.Serializable]
     public class Variable_Boolean : Variable<bool>
     {
+        public Variable_Boolean() : base() { }
+
+        public Variable_Boolean(string name, bool value) : base(name, value) 
+        { 
+        }
+
         protected override void ApplyMutations()
         {
 
