@@ -308,7 +308,7 @@ namespace com.absence.variablesystem.editor
 
             if (VariableBankDatabase.NoBanks)
             {
-                EditorGUILayout.HelpBox("There are no VariableBanks in your project. Create at least one to continue.", MessageType.Error);
+                EditorGUI.LabelField(position, "There are no VariableBanks in your project. Create at least one to continue.");
                 return;
             }
 
