@@ -12,7 +12,7 @@ namespace com.absence.variablesystem.editor
             VariableBankDatabase.Refresh();
 
             StringBuilder sb = new StringBuilder();
-            sb.Append("<color=white>Banks found in assets: </color>");
+            sb.Append("<b>[VBDATABASE] Banks found in assets: </b>");
 
             VariableBankDatabase.BanksInAssets.ForEach(bankAsset =>
             {
