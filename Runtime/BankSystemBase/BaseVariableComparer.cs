@@ -31,6 +31,79 @@ namespace com.absence.variablesystem
         [SerializeField] protected string m_stringValue;
         [SerializeField] protected bool m_boolValue;
 
+        public string TargetVariableName
+        {
+            get
+            {
+                return m_targetVariableName;
+            }
+
+            set
+            {
+                m_targetVariableName = value;
+            }
+        }
+        public ComparisonType TypeOfComparison
+        {
+            get
+            {
+                return m_comparisonType;
+            }
+
+            set
+            {
+                m_comparisonType = value;
+            }
+        }
+        public int IntValue
+        {
+            get
+            {
+                return m_intValue;
+            }
+
+            set
+            {
+                m_intValue = value;
+            }
+        }
+        public float FloatValue
+        {
+            get
+            {
+                return m_floatValue;
+            }
+
+            set
+            {
+                m_floatValue = value;
+            }
+        }
+        public string StringValue
+        {
+            get
+            {
+                return m_stringValue;
+            }
+
+            set
+            {
+                m_stringValue = value;
+            }
+        }
+        public bool BooleanValue
+        {
+            get
+            {
+                return m_boolValue;
+            }
+
+            set
+            {
+                m_boolValue = value;
+            }
+        }
+
         /// <summary>
         /// Will the bank selector be hidden in the editor?
         /// </summary>

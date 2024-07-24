@@ -63,8 +63,6 @@ namespace com.absence.variablesystem
 
             set 
             {
-                if (!IsClone) throw new Exception("non-clone banks' lists are immutable.");
-
                 m_ints = value;
             } 
         }
@@ -81,8 +79,6 @@ namespace com.absence.variablesystem
 
             set
             {
-                if (!IsClone) throw new Exception("non-clone banks' lists are immutable.");
-
                 m_floats = value;
             }
         }
@@ -99,8 +95,6 @@ namespace com.absence.variablesystem
 
             set
             {
-                if (!IsClone) throw new Exception("non-clone banks' lists are immutable.");
-
                 m_strings = value;
             }
         }
@@ -117,8 +111,6 @@ namespace com.absence.variablesystem
 
             set
             {
-                if (!IsClone) throw new Exception("non-clone banks' lists are immutable.");
-
                 m_booleans = value;
             }
         }
