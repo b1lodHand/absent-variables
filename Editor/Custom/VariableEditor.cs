@@ -7,23 +7,25 @@ namespace com.absence.variablesystem.editor
     [CustomPropertyDrawer(typeof(VariableBase), true)]
     public class VariableEditor : PropertyDrawer
     {
+        static readonly float s_verticalPaddingBottom = 1f;
+        static readonly float s_horizontalArrayOffset = 15f;
+
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            int lineCount = 1;
-            if (property.IsArrayElement()) lineCount = 2;
-
-            return EditorGUIUtility.singleLineHeight * lineCount + EditorGUIUtility.standardVerticalSpacing * (lineCount - 1);
+            SerializedProperty valueProp = property.FindPropertyRelative("m_value");
+            return EditorGUI.GetPropertyHeight(valueProp, new GUIContent("Value"), true) + EditorGUIUtility.singleLineHeight + (EditorGUIUtility.standardVerticalSpacing * 2);
         }
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             EditorGUI.BeginProperty(position, label, property);
 
-            var nameProp = property.FindPropertyRelative("m_name");
-            var valueProp = property.FindPropertyRelative("m_value");
+            SerializedProperty nameProp = property.FindPropertyRelative("m_name");
+            SerializedProperty valueProp = property.FindPropertyRelative("m_value");
 
-            var horizontalSpacing = 15;
-            var sizeX = (position.size.x - horizontalSpacing) / 2;
+            float horizontalSpacing = 15f;
+            float sizeX = (position.width - horizontalSpacing) / 2;
+            float totalHeight = position.height;
 
             Rect dynamicPosition = new Rect(position.x, position.y, sizeX, EditorGUIUtility.singleLineHeight);
 
@@ -56,6 +58,14 @@ namespace com.absence.variablesystem.editor
                 dynamicPosition.height += 2;
 
                 dynamicPosition.x += (horizontalSpacing - 1) / 2;
+
+                if (valueProp.isArray)
+                {
+                    dynamicPosition.x += s_horizontalArrayOffset;
+                    dynamicPosition.width -= s_horizontalArrayOffset;
+                }
+
+                dynamicPosition.height = totalHeight - s_verticalPaddingBottom - EditorGUIUtility.singleLineHeight - (EditorGUIUtility.standardVerticalSpacing * 2);
 
                 EditorGUI.PropertyField(dynamicPosition, valueProp, new GUIContent() { text = "" });
             }
