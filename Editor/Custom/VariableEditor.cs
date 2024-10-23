@@ -59,7 +59,7 @@ namespace com.absence.variablesystem.editor
 
                 dynamicPosition.x += (horizontalSpacing - 1) / 2;
 
-                if (valueProp.isArray)
+                if (valueProp.propertyType == SerializedPropertyType.Generic)
                 {
                     dynamicPosition.x += s_horizontalArrayOffset;
                     dynamicPosition.width -= s_horizontalArrayOffset;
@@ -67,12 +67,12 @@ namespace com.absence.variablesystem.editor
 
                 dynamicPosition.height = totalHeight - s_verticalPaddingBottom - EditorGUIUtility.singleLineHeight - (EditorGUIUtility.standardVerticalSpacing * 2);
 
-                EditorGUI.PropertyField(dynamicPosition, valueProp, new GUIContent() { text = "" });
+                EditorGUI.PropertyField(dynamicPosition, valueProp, new GUIContent() { text = "" }, true);
             }
 
             void DrawDefaultGUI()
             {
-                EditorGUI.PropertyField(position, valueProp, new GUIContent() { text = property.displayName });
+                EditorGUI.PropertyField(position, valueProp, new GUIContent() { text = property.displayName }, true);
             }
         }
     }
