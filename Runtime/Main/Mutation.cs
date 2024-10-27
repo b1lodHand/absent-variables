@@ -5,34 +5,21 @@ namespace com.absence.variablesystem.mutations
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [System.Serializable]
-    public class Mutation<T>
+    public abstract class Mutation<T>
     {
-        public MutationType MutationType { get; private set; }
-        public T MutationValue { get; private set; }
+        public T Value { get; private set; }
+        public abstract int Priority { get; }
 
-        public Mutation(T mutationValue, MutationType mutationType)
+        public abstract void OnAdd(ref T targetValue);
+        public abstract void OnRemove(ref T targetValue);
+        public abstract void OnApply(ref T targetValue);
+        public abstract void OnRevert(ref T targetValue);
+
+        public Mutation() { }
+
+        public Mutation(T mutationValue)
         {
-            MutationValue = mutationValue;
-            MutationType = mutationType;
+            Value = mutationValue;
         }
-    }
-
-    /// <summary>
-    /// Used to decide how the mutation will work.
-    /// </summary>
-    public enum MutationType
-    {
-        /// <summary>
-        /// Addition.
-        /// </summary>
-        Additive = 0,
-        /// <summary>
-        /// Multiplication.
-        /// </summary>
-        Multiplicative = 1,
-        /// <summary>
-        /// Any other type of mutation.
-        /// </summary>
-        Other = 2,
     }
 }

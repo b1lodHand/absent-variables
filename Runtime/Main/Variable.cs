@@ -2,6 +2,7 @@ using com.absence.variablesystem.internals;
 using com.absence.variablesystem.mutations;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace com.absence.variablesystem
@@ -29,25 +30,36 @@ namespace com.absence.variablesystem
 
             set
             {
-                var previous = m_value;
-                var context = new VariableValueChangedCallbackContext<T>() { previousValue = previous, newValue = value };
-                m_onValueChanged?.Invoke(context);
+                RevertMutations();
+
+                if (!m_bypassEvents)
+                {
+                    var previous = m_value;
+                    var context = new VariableValueChangedCallbackContext<T>() { previousValue = previous, newValue = value };
+                    m_onValueChanged?.Invoke(context);
+                }
+
                 m_value = value;
+
+                ApplyMutations();
             }
         }
 
+        protected bool m_bypassEvents;
 
         public Variable()
         {
             this.m_name = string.Empty;
+            this.m_bypassEvents = false;
         }
         public Variable(string name, T value)
         {
             this.m_name = name;
             this.m_value = value;
+            this.m_bypassEvents = false;
         }
 
-        protected List<Mutation<T>> m_mutations  = new List<Mutation<T>>();
+        protected List<Mutation<T>> m_mutations = new List<Mutation<T>>();
 
         /// <summary>
         /// Mutate this variable.
@@ -56,7 +68,10 @@ namespace com.absence.variablesystem
         public void AddMutation(Mutation<T> mutation)
         {
             RevertMutations();
+
             m_mutations.Add(mutation);
+            mutation.OnAdd(ref m_value);
+
             ApplyMutations();
         }
 
@@ -67,7 +82,13 @@ namespace com.absence.variablesystem
         public void RemoveMutation(Mutation<T> mutation)
         {
             RevertMutations();
-            if(m_mutations.Contains(mutation)) m_mutations.Remove(mutation);
+
+            if (m_mutations.Contains(mutation))
+            {
+                mutation.OnRemove(ref m_value);
+                m_mutations.Remove(mutation);
+            }
+
             ApplyMutations();
         }
 
@@ -81,15 +102,49 @@ namespace com.absence.variablesystem
             ApplyMutations();
         }
 
+        public void Refresh()
+        {
+            RevertMutations();
+            ApplyMutations();
+        }
+
+        protected void RevertMutations()
+        {
+            T val = m_value;
+            m_mutations.OrderByDescending(mut => mut.Priority).ToList().ForEach(mut2 => mut2.OnRevert(ref m_value));
+
+            var context = new VariableValueChangedCallbackContext<T>()
+            {
+                previousValue = val,
+                newValue = m_value
+            };
+
+            m_onValueChanged?.Invoke(context);
+        }
+
+        protected void ApplyMutations()
+        {
+            T val = m_value;
+            m_mutations.OrderBy(mut => mut.Priority).ToList().ForEach(mut2 => mut2.OnApply(ref m_value));
+
+            var context = new VariableValueChangedCallbackContext<T>()
+            {
+                previousValue = val,
+                newValue = m_value
+            };
+
+            m_onValueChanged?.Invoke(context);
+        }
+
         /// <summary>
         /// Use to define how this variable subtype handles the reverting process of mutations.
         /// </summary>
-        protected abstract void RevertMutations();
+        protected abstract void RevertMutations_Internal();
 
         /// <summary>
         /// Use to define how this variable subtype handles the applying process of mutations.
         /// </summary>
-        protected abstract void ApplyMutations();
+        protected abstract void ApplyMutations_Internal();
 
         /// <summary>
         /// Get notified when the value of this variable changes.
@@ -107,6 +162,14 @@ namespace com.absence.variablesystem
         public void RemoveValueChangeListener(Action<VariableValueChangedCallbackContext<T>> evt)
         {
             m_onValueChanged -= evt;
+        }
+
+        public void DisableValueChangeCallbacks() => m_bypassEvents = true;
+        public void EnableValueChangeCallbacks() => m_bypassEvents = false;
+
+        public static implicit operator T(Variable<T> c)
+        {
+            return c.Value;
         }
     }
 

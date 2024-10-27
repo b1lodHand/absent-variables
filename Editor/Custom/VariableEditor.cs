@@ -13,7 +13,8 @@ namespace com.absence.variablesystem.editor
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             SerializedProperty valueProp = property.FindPropertyRelative("m_value");
-            return EditorGUI.GetPropertyHeight(valueProp, new GUIContent("Value"), true) + EditorGUIUtility.singleLineHeight + (EditorGUIUtility.standardVerticalSpacing * 2);
+            if (property.IsArrayElement()) return EditorGUI.GetPropertyHeight(valueProp, new GUIContent("Value"), true) + EditorGUIUtility.singleLineHeight + (EditorGUIUtility.standardVerticalSpacing * 2);
+            else return EditorGUI.GetPropertyHeight(valueProp, new GUIContent("Value"), true);
         }
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
