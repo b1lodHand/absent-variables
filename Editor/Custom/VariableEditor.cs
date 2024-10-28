@@ -73,7 +73,7 @@ namespace com.absence.variablesystem.editor
 
             void DrawDefaultGUI()
             {
-                EditorGUI.PropertyField(position, valueProp, new GUIContent() { text = property.displayName }, true);
+                EditorGUI.PropertyField(position, valueProp, label, true);
             }
         }
     }

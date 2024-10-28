@@ -1,7 +1,9 @@
 {
     "name": "com.absence.variablesystem",
     "rootNamespace": "com.absence.variablesystem",
-    "references": [],
+    "references": [
+        "com.absence.timersystem"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
@@ -9,6 +11,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.absence.timersystem",
+            "expression": "1.0.1",
+            "define": "CAN_USE_TIMERS"
+        }
+    ],
     "noEngineReferences": false
 }

@@ -47,15 +47,15 @@ namespace com.absence.variablesystem
             }
         }
 
-        [SerializeField] protected List<Variable_Integer> m_ints = new();
-        [SerializeField] protected List<Variable_Float> m_floats = new();
-        [SerializeField] protected List<Variable_String> m_strings = new();
-        [SerializeField] protected List<Variable_Boolean> m_booleans = new();
+        [SerializeField] protected List<Integer> m_ints = new();
+        [SerializeField] protected List<Float> m_floats = new();
+        [SerializeField] protected List<builtin.String> m_strings = new();
+        [SerializeField] protected List<builtin.Boolean> m_booleans = new();
 
         /// <summary>
         /// All of the integer variables within this bank.
         /// </summary>
-        public List<Variable_Integer> Ints 
+        public List<Integer> Ints 
         { 
             get 
             { 
@@ -71,7 +71,7 @@ namespace com.absence.variablesystem
         /// <summary>
         /// All of the floating point variables within this bank.
         /// </summary>
-        public List<Variable_Float> Floats
+        public List<Float> Floats
         {
             get
             {
@@ -87,7 +87,7 @@ namespace com.absence.variablesystem
         /// <summary>
         /// All of the string variables within this bank.
         /// </summary>
-        public List<Variable_String> Strings
+        public List<builtin.String> Strings
         {
             get
             {
@@ -103,7 +103,7 @@ namespace com.absence.variablesystem
         /// <summary>
         /// All of the boolean variables within this bank.
         /// </summary>
-        public List<Variable_Boolean> Booleans
+        public List<builtin.Boolean> Booleans
         {
             get
             {
@@ -182,7 +182,7 @@ namespace com.absence.variablesystem
             variableName = TrimVariableNameType(variableName);
             value = 0;
 
-            List<Variable_Integer> check = m_ints.Where(v => v.Name == variableName).ToList();
+            List<Integer> check = m_ints.Where(v => v.Name == variableName).ToList();
             if (check.Count == 0) return false;
 
             value = check.FirstOrDefault().Value;
@@ -200,7 +200,7 @@ namespace com.absence.variablesystem
             variableName = TrimVariableNameType(variableName);
             value = 0f;
 
-            List<Variable_Float> check = m_floats.Where(v => v.Name == variableName).ToList();
+            List<Float> check = m_floats.Where(v => v.Name == variableName).ToList();
             if (check.Count == 0) return false;
 
             value = check.FirstOrDefault().Value;
@@ -218,7 +218,7 @@ namespace com.absence.variablesystem
             variableName = TrimVariableNameType(variableName);
             value = string.Empty;
 
-            List<Variable_String> check = m_strings.Where(v => v.Name == variableName).ToList();
+            List<builtin.String> check = m_strings.Where(v => v.Name == variableName).ToList();
             if (check.Count == 0) return false;
 
             value = check.FirstOrDefault().Value;
@@ -236,7 +236,7 @@ namespace com.absence.variablesystem
             variableName = TrimVariableNameType(variableName);
             value = false;
 
-            List<Variable_Boolean> check = m_booleans.Where(v => v.Name == variableName).ToList();
+            List<builtin.Boolean> check = m_booleans.Where(v => v.Name == variableName).ToList();
             if (check.Count == 0) return false;
 
             value = check.FirstOrDefault().Value;
@@ -252,7 +252,7 @@ namespace com.absence.variablesystem
         {
             variableName = TrimVariableNameType(variableName);
 
-            List<Variable_Integer> check = m_ints.Where(v => v.Name == variableName).ToList();
+            List<Integer> check = m_ints.Where(v => v.Name == variableName).ToList();
             if (check.Count == 0) return;
 
             check.FirstOrDefault().AddValueChangeListener(callbackAction);
@@ -267,7 +267,7 @@ namespace com.absence.variablesystem
         {
             variableName = TrimVariableNameType(variableName);
 
-            List<Variable_Float> check = m_floats.Where(v => v.Name == variableName).ToList();
+            List<Float> check = m_floats.Where(v => v.Name == variableName).ToList();
             if (check.Count == 0) return;
 
             check.FirstOrDefault().AddValueChangeListener(callbackAction);
@@ -282,7 +282,7 @@ namespace com.absence.variablesystem
         {
             variableName = TrimVariableNameType(variableName);
 
-            List<Variable_String> check = m_strings.Where(v => v.Name == variableName).ToList();
+            List<builtin.String> check = m_strings.Where(v => v.Name == variableName).ToList();
             if (check.Count == 0) return;
 
             check.FirstOrDefault().AddValueChangeListener(callbackAction);
@@ -297,7 +297,7 @@ namespace com.absence.variablesystem
         {
             variableName = TrimVariableNameType(variableName);
 
-            List<Variable_Boolean> check = m_booleans.Where(v => v.Name == variableName).ToList();
+            List<builtin.Boolean> check = m_booleans.Where(v => v.Name == variableName).ToList();
             if (check.Count == 0) return;
 
             check.FirstOrDefault().AddValueChangeListener(callbackAction);

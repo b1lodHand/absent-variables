@@ -45,7 +45,7 @@ namespace com.absence.variablesystem
             }
         }
 
-        protected bool m_bypassEvents;
+        [SerializeField] protected bool m_bypassEvents;
 
         public Variable()
         {
@@ -59,18 +59,18 @@ namespace com.absence.variablesystem
             this.m_bypassEvents = false;
         }
 
-        protected List<Mutation<T>> m_mutations = new List<Mutation<T>>();
+        [SerializeField] protected List<Mutation<T>> m_mutations = new List<Mutation<T>>();
 
         /// <summary>
         /// Mutate this variable.
         /// </summary>
         /// <param name="mutation"></param>
-        public void AddMutation(Mutation<T> mutation)
+        public void Mutate(Mutation<T> mutation)
         {
             RevertMutations();
 
             m_mutations.Add(mutation);
-            mutation.OnAdd(ref m_value);
+            mutation.OnAdd(this);
 
             ApplyMutations();
         }
@@ -79,13 +79,13 @@ namespace com.absence.variablesystem
         /// Remove a specific mutation from this variable.
         /// </summary>
         /// <param name="mutation"></param>
-        public void RemoveMutation(Mutation<T> mutation)
+        public void Immutate(Mutation<T> mutation)
         {
             RevertMutations();
 
             if (m_mutations.Contains(mutation))
             {
-                mutation.OnRemove(ref m_value);
+                mutation.OnRemove(this);
                 m_mutations.Remove(mutation);
             }
 
@@ -108,7 +108,22 @@ namespace com.absence.variablesystem
             ApplyMutations();
         }
 
-        protected void RevertMutations()
+        protected void CopyMutations(Variable<T> copyFrom)
+        {
+            m_mutations = new List<Mutation<T>>(copyFrom.m_mutations);
+        }
+
+        protected T1 WithMutationsOf<T1>(T1 other) where T1 : Variable<T>
+        {
+            CopyMutations(other);
+            Refresh();
+            return (T1)this;
+        }
+
+        /// <summary>
+        /// Use to define how this variable subtype handles the reverting process of mutations.
+        /// </summary>
+        protected virtual void RevertMutations()
         {
             T val = m_value;
             m_mutations.OrderByDescending(mut => mut.Priority).ToList().ForEach(mut2 => mut2.OnRevert(ref m_value));
@@ -122,7 +137,10 @@ namespace com.absence.variablesystem
             m_onValueChanged?.Invoke(context);
         }
 
-        protected void ApplyMutations()
+        /// <summary>
+        /// Use to define how this variable subtype handles the applying process of mutations.
+        /// </summary>
+        protected virtual void ApplyMutations()
         {
             T val = m_value;
             m_mutations.OrderBy(mut => mut.Priority).ToList().ForEach(mut2 => mut2.OnApply(ref m_value));
@@ -135,16 +153,6 @@ namespace com.absence.variablesystem
 
             m_onValueChanged?.Invoke(context);
         }
-
-        /// <summary>
-        /// Use to define how this variable subtype handles the reverting process of mutations.
-        /// </summary>
-        protected abstract void RevertMutations_Internal();
-
-        /// <summary>
-        /// Use to define how this variable subtype handles the applying process of mutations.
-        /// </summary>
-        protected abstract void ApplyMutations_Internal();
 
         /// <summary>
         /// Get notified when the value of this variable changes.

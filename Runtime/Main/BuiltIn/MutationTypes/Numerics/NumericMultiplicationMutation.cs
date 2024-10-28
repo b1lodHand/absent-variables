@@ -1,26 +1,38 @@
-namespace com.absence.variablesystem.mutations.builtin.internals
+using com.absence.variablesystem.internals;
+using com.absence.variablesystem.mutations;
+
+namespace com.absence.variablesystem.builtin.mutations.internals
 {
+    [System.Serializable]
     public class FloatMultiplicationMutation : Mutation<float>
     {
+        public FloatMultiplicationMutation() : base()
+        {
+        }
+
         public FloatMultiplicationMutation(float mutationValue) : base(mutationValue)
         {
         }
 
-        public override int Priority => 1;
-
-        public override void OnAdd(ref float targetValue)
+        public FloatMultiplicationMutation(float mutationValue, AffectionMethod affectionMethod) : base(mutationValue, affectionMethod)
         {
-            
         }
+
+#if CAN_USE_TIMERS
+        public FloatMultiplicationMutation(float mutationValue, float duration) : base(mutationValue, duration)
+        {
+        }
+
+        public FloatMultiplicationMutation(float mutationValue, AffectionMethod affectionMethod, float duration) : base(mutationValue, affectionMethod, duration)
+        {
+        }
+
+        protected override int m_order => 1;
+#endif
 
         public override void OnApply(ref float targetValue)
         {
             targetValue *= Value;
-        }
-
-        public override void OnRemove(ref float targetValue)
-        {
-            
         }
 
         public override void OnRevert(ref float targetValue)
@@ -29,27 +41,36 @@ namespace com.absence.variablesystem.mutations.builtin.internals
         }
     }
 
+    [System.Serializable]
     public class IntegerMultiplicationMutation : Mutation<int>
     {
+        public IntegerMultiplicationMutation() : base()
+        {
+        }
+
         public IntegerMultiplicationMutation(int mutationValue) : base(mutationValue)
         {
         }
 
-        public override int Priority => 1;
-
-        public override void OnAdd(ref int targetValue)
+        public IntegerMultiplicationMutation(int mutationValue, AffectionMethod affectionMethod) : base(mutationValue, affectionMethod)
         {
-            
         }
+
+#if CAN_USE_TIMERS
+        public IntegerMultiplicationMutation(int mutationValue, float duration) : base(mutationValue, duration)
+        {
+        }
+
+        public IntegerMultiplicationMutation(int mutationValue, AffectionMethod affectionMethod, float duration) : base(mutationValue, affectionMethod, duration)
+        {
+        }
+
+        protected override int m_order => 1;
+#endif
 
         public override void OnApply(ref int targetValue)
         {
             targetValue *= Value;
-        }
-
-        public override void OnRemove(ref int targetValue)
-        {
-            
         }
 
         public override void OnRevert(ref int targetValue)
