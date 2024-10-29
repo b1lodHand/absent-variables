@@ -2,7 +2,7 @@ using com.absence.variablesystem.mutations.internals;
 using com.absence.variablesystem.internals;
 using UnityEngine;
 
-namespace com.absence.variablesystem.builtin.mutations
+namespace com.absence.variablesystem.mutations.builtin
 {
     public static class Multiply
     {
