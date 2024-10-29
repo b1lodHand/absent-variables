@@ -1,7 +1,6 @@
 using com.absence.variablesystem.internals;
-using com.absence.variablesystem.mutations;
 
-namespace com.absence.variablesystem.builtin.mutations.internals
+namespace com.absence.variablesystem.mutations.internals
 {
     [System.Serializable]
     public class FloatAdditionMutation : Mutation<float>

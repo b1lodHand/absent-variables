@@ -1,5 +1,5 @@
 using com.absence.variablesystem.internals;
-using com.absence.variablesystem.builtin.mutations.internals;
+using com.absence.variablesystem.mutations.internals;
 
 namespace com.absence.variablesystem.builtin.mutations
 {

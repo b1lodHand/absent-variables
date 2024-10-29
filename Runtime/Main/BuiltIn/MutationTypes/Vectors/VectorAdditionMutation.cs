@@ -1,8 +1,7 @@
 using com.absence.variablesystem.internals;
-using com.absence.variablesystem.mutations;
 using UnityEngine;
 
-namespace com.absence.variablesystem.builtin.mutations.internals
+namespace com.absence.variablesystem.mutations.internals
 {
     [System.Serializable]
     public class Vector2AdditionMutation : Mutation<Vector2>
