@@ -4,7 +4,7 @@ using com.absence.variablesystem.builtin.mutations.internals;
 namespace com.absence.variablesystem.builtin.mutations
 {
     [System.Serializable]
-    public class Add
+    public static class Add
     {
         public static FloatAdditionMutation CreateForFloat(float value, AffectionMethod additionType = AffectionMethod.InOrder)
         {

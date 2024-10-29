@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace com.absence.variablesystem.builtin.mutations
 {
-    public class Multiply
+    public static class Multiply
     {
         public static FloatMultiplicationMutation CreateForFloat(float value, AffectionMethod mulType  = AffectionMethod.InOrder)
         {

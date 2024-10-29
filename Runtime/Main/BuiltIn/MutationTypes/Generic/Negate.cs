@@ -3,7 +3,7 @@ using com.absence.variablesystem.internals;
 
 namespace com.absence.variablesystem.builtin.mutations
 {
-    public class Negate
+    public static class Negate
     {
         public static FloatNegateMutation CreateForFloat(float value, AffectionMethod negType = AffectionMethod.InOrder)
         {
@@ -15,7 +15,7 @@ namespace com.absence.variablesystem.builtin.mutations
             return new IntegerNegateMutation(value, negType);
         }
 
-        public Vector2NegateMutation CreateForVec2(UnityEngine.Vector2 value, AffectionMethod negType = AffectionMethod.InOrder)
+        public static Vector2NegateMutation CreateForVec2(UnityEngine.Vector2 value, AffectionMethod negType = AffectionMethod.InOrder)
         {
             return new Vector2NegateMutation(value, negType);
         }

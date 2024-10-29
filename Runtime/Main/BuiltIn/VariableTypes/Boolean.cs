@@ -1,3 +1,5 @@
+using com.absence.variablesystem.internals;
+
 namespace com.absence.variablesystem.builtin
 {
     [System.Serializable]
@@ -5,6 +7,7 @@ namespace com.absence.variablesystem.builtin
     {
         bool m_initialValue;
 
+        #region Constructors
         public Boolean() : base()
         {
             m_initialValue = Value;
@@ -14,7 +17,9 @@ namespace com.absence.variablesystem.builtin
         {
             m_initialValue = Value;
         }
+        #endregion
 
+        #region Conversions
         public static implicit operator Boolean(bool v)
         {
             return new Boolean("", v);
@@ -24,10 +29,20 @@ namespace com.absence.variablesystem.builtin
         {
             return f.Value;
         }
+        #endregion
 
+        #region Wrappers
+        public void Invert(SetType setType = SetType.Baked)
+        {
+            Set(!m_value, setType);
+        }
+        #endregion
+
+        #region Operators
         public static Boolean operator !(Boolean f)
         {
             return new Boolean(f.Name, !f);
         }
+        #endregion
     }
 }

@@ -3,7 +3,7 @@ using com.absence.variablesystem.internals;
 
 namespace com.absence.variablesystem.builtin.mutations
 {
-    public class Set
+    public static class Set
     {
         public static SetMutation<T> Create<T>(T mutationValue, AffectionMethod setType = AffectionMethod.InOrder)
         {

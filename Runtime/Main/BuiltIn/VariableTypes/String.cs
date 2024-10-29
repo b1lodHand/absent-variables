@@ -3,6 +3,7 @@ namespace com.absence.variablesystem.builtin
     [System.Serializable]
     public class String : Variable<string>
     {
+        #region Constructors
         public String() : base()
         {
         }
@@ -11,7 +12,9 @@ namespace com.absence.variablesystem.builtin
         {
 
         }
+        #endregion
 
+        #region Conversions
         public static implicit operator String(string v)
         {
             return new String("", v);
@@ -21,5 +24,17 @@ namespace com.absence.variablesystem.builtin
         {
             return c.Value;
         }
+        #endregion
+
+        #region Operators
+        public static String operator +(String a, string b)
+        {
+            return new String("", a.Value + b);
+        }
+        public static String operator +(String a, String b)
+        {
+            return new String("", a.Value + b.Value);
+        }
+        #endregion
     }
 }

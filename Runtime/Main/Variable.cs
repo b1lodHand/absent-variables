@@ -30,18 +30,7 @@ namespace com.absence.variablesystem
 
             set
             {
-                RevertMutations();
-
-                if (!m_bypassEvents)
-                {
-                    var previous = m_value;
-                    var context = new VariableValueChangedCallbackContext<T>() { previousValue = previous, newValue = value };
-                    m_onValueChanged?.Invoke(context);
-                }
-
-                m_value = value;
-
-                ApplyMutations();
+                SetRaw(value);
             }
         }
 
@@ -108,6 +97,44 @@ namespace com.absence.variablesystem
             ApplyMutations();
         }
 
+        public void Set(T value, SetType setType = SetType.Baked)
+        {
+            switch (setType)
+            {
+                case SetType.Raw:
+                    SetRaw(value);
+                    break;
+                case SetType.Baked:
+                    SetBaked(value);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        protected virtual void SetRaw(T value)
+        {
+            T val = m_value;
+
+            RevertMutations();
+
+            m_value = value;
+
+            ApplyMutations();
+
+            RaiseValueChangeEvent(val, m_value);
+        }
+
+        protected virtual void SetBaked(T value)
+        {
+            T val = m_value;
+            m_value = value;
+
+            Refresh();
+
+            RaiseValueChangeEvent(val, m_value);
+        }
+
         protected void CopyMutations(Variable<T> copyFrom)
         {
             m_mutations = new List<Mutation<T>>(copyFrom.m_mutations);
@@ -128,13 +155,7 @@ namespace com.absence.variablesystem
             T val = m_value;
             m_mutations.OrderByDescending(mut => mut.Priority).ToList().ForEach(mut2 => mut2.OnRevert(ref m_value));
 
-            var context = new VariableValueChangedCallbackContext<T>()
-            {
-                previousValue = val,
-                newValue = m_value
-            };
-
-            m_onValueChanged?.Invoke(context);
+            RaiseValueChangeEvent(val, Value);
         }
 
         /// <summary>
@@ -145,13 +166,7 @@ namespace com.absence.variablesystem
             T val = m_value;
             m_mutations.OrderBy(mut => mut.Priority).ToList().ForEach(mut2 => mut2.OnApply(ref m_value));
 
-            var context = new VariableValueChangedCallbackContext<T>()
-            {
-                previousValue = val,
-                newValue = m_value
-            };
-
-            m_onValueChanged?.Invoke(context);
+            RaiseValueChangeEvent(val, Value);
         }
 
         /// <summary>
@@ -174,6 +189,23 @@ namespace com.absence.variablesystem
 
         public void DisableValueChangeCallbacks() => m_bypassEvents = true;
         public void EnableValueChangeCallbacks() => m_bypassEvents = false;
+        protected void RaiseValueChangeEvent(T previousValue, T currentValue)
+        {
+            if (m_bypassEvents) return;
+
+            var context = new VariableValueChangedCallbackContext<T>()
+            {
+                previousValue = previousValue,
+                newValue = currentValue
+            };
+
+            m_onValueChanged?.Invoke(context);
+        }
+
+        public virtual bool ValueEquals(Variable<T> other)
+        {
+            return this.Value.Equals(other.Value);
+        }
 
         public static implicit operator T(Variable<T> c)
         {
