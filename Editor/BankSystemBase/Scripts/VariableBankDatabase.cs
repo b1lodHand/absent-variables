@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 
-namespace com.absence.variablesystem.editor
+namespace com.absence.variablesystem.banksystembase.editor
 {
     /// <summary>
     /// The static class responsible for holding a list of all <see cref="VariableBank"/>s in the project. <b>Editor only! For runtime, use 

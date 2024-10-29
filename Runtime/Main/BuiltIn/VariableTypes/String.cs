@@ -1,3 +1,5 @@
+using com.absence.variablesystem.internals;
+
 namespace com.absence.variablesystem.builtin
 {
     [System.Serializable]

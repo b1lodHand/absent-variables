@@ -1,22 +1,22 @@
+using System.Collections.Generic;
 using UnityEditor;
+using UnityEngine.UIElements;
 using UnityEngine;
 using UnityEditor.UIElements;
-using UnityEngine.UIElements;
-using System.Collections.Generic;
 using com.absence.variablesystem.imported;
 
-namespace com.absence.variablesystem.editor
+namespace com.absence.variablesystem.banksystembase.editor
 {
     /// <summary>
-    /// A custom property drawer for <see cref="BaseVariableComparer"/>.
+    /// A custom property drawer script for <see cref="BaseVariableSetter"/>.
     /// </summary>
-    [CustomPropertyDrawer(typeof(BaseVariableComparer), true)]
-    public class VariableComparerDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(BaseVariableSetter), true)]
+    public class VariableSetterDrawer : PropertyDrawer
     {
         /// <summary>
         /// Path of the uss file.
         /// </summary>
-        protected static readonly string StyleSheetPath = "Packages/com.absence.variablesystem/Editor/uss/VariableComparer.uss";
+        protected static readonly string StyleSheetPath = "Packages/com.absence.variablesystem/Editor/uss/VariableSetter.uss";
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
@@ -29,7 +29,6 @@ namespace com.absence.variablesystem.editor
             root.style.flexShrink = 1;
             root.style.alignSelf = Align.Stretch;
 
-            // instantiate the main container.
             VisualElement container = new VisualElement();
             container.styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>(StyleSheetPath));
             container.AddToClassList("container");
@@ -40,13 +39,13 @@ namespace com.absence.variablesystem.editor
             return root;
         }
 
-        protected virtual VisualElement DrawGUI(VisualElement container, SerializedProperty property)
+        private VisualElement DrawGUI(VisualElement container, SerializedProperty property)
         {
             // get serialized object.
             var serializedObject = property.serializedObject;
-            BaseVariableComparer comparer = (BaseVariableComparer)property.boxedValue;
+            BaseVariableSetter setter = (BaseVariableSetter)property.boxedValue;
 
-            var comparisonProp = property.FindPropertyRelative("m_comparisonType");
+            var setTypeProp = property.FindPropertyRelative("m_setType");
             var bankGuidProp = property.FindPropertyRelative("m_targetBankGuid");
             var targetVarNameProp = property.FindPropertyRelative("m_targetVariableName");
 
@@ -77,7 +76,7 @@ namespace com.absence.variablesystem.editor
 
             targetBank = VariableBankDatabase.GetBankIfExists(currentBankGuid);
 
-            if (!comparer.HasFixedBank)
+            if (!setter.HasFixedBank)
             {
                 bankSelector.SetValueWithoutNotify(targetBank.name);
             }
@@ -90,9 +89,9 @@ namespace com.absence.variablesystem.editor
 
             // instantiate selector for set type.
             EnumField setTypeSelector = new EnumField();
-            setTypeSelector.name = "comparison";
-            setTypeSelector.AddToClassList("compSelector");
-            setTypeSelector.BindProperty(comparisonProp);
+            setTypeSelector.name = "settype";
+            setTypeSelector.AddToClassList("setTypeSelector");
+            setTypeSelector.BindProperty(setTypeProp);
 
             // instantiate fields for actual values to check.
             #region Value Fields
@@ -119,7 +118,7 @@ namespace com.absence.variablesystem.editor
 
             bankSelector.RegisterValueChangedCallback(evt =>
             {
-                Undo.RecordObject(property.serializedObject.targetObject, "Variable Comparer (Edited)");
+                Undo.RecordObject(property.serializedObject.targetObject, "Variable Setter (Edited)");
 
                 string targetGuid = VariableBankDatabase.NameToGuid(evt.newValue);
                 targetBank = VariableBankDatabase.GetBankIfExists(targetGuid);
@@ -132,15 +131,15 @@ namespace com.absence.variablesystem.editor
             // register var selector on change.
             variableSelector.RegisterValueChangedCallback(evt =>
             {
-                Undo.RecordObject(property.serializedObject.targetObject, "Variable Comparer (Edited)");
+                Undo.RecordObject(property.serializedObject.targetObject, "Variable Setter (Edited)");
 
-                RefreshCompSelector();
+                RefreshSetTypeSelector();
                 RefreshValueFields();
 
                 serializedObject.ApplyModifiedProperties();
             });
 
-            if(!comparer.HasFixedBank) container.Add(bankSelector);
+            if(!setter.HasFixedBank) container.Add(bankSelector);
             container.Add(variableSelector);
             container.Add(setTypeSelector);
 
@@ -152,7 +151,7 @@ namespace com.absence.variablesystem.editor
             }
 
             RefreshVarSelector();
-            RefreshCompSelector();
+            RefreshSetTypeSelector();
             RefreshValueFields();
 
             return container;
@@ -210,10 +209,9 @@ namespace com.absence.variablesystem.editor
                     container.Add(boolToggle);
             }
 
-            void RefreshCompSelector()
+            void RefreshSetTypeSelector()
             {
-                var lastCompValue = (BaseVariableComparer.ComparisonType)comparisonProp.enumValueIndex;
-                var comparisonSelector = container.Q<EnumField>("comparison");
+                var comparisonSelector = container.Q<EnumField>("settype");
 
                 comparisonSelector.SetEnabled(true);
                 if (targetBank == null) return;
@@ -222,8 +220,7 @@ namespace com.absence.variablesystem.editor
                 if (currVarName != VariableBank.Null && !(targetBank.HasString(currVarName)) &&
                     !(targetBank.HasBoolean(currVarName))) return;
 
-                if (lastCompValue == BaseVariableComparer.ComparisonType.NotEquals) comparisonSelector.value = BaseVariableComparer.ComparisonType.NotEquals;
-                else comparisonSelector.value = BaseVariableComparer.ComparisonType.EqualsTo;
+                comparisonSelector.value = BaseVariableSetter.SetType.SetTo;
                 comparisonSelector.SetEnabled(false);
             }
         }
@@ -241,7 +238,7 @@ namespace com.absence.variablesystem.editor
 
             // undo redo stuff.
             EditorGUI.BeginChangeCheck();
-            Undo.RecordObject(property.serializedObject.targetObject, "Variable Comparer (Edited)");
+            Undo.RecordObject(property.serializedObject.targetObject, "Variable Setter (Edited)");
 
             DrawIMGUI(position, property);
 
@@ -261,9 +258,9 @@ namespace com.absence.variablesystem.editor
         void DrawIMGUI(Rect position, SerializedProperty property)
         {
             // get properties.
-            BaseVariableComparer comparer = (BaseVariableComparer)property.boxedValue;
+            BaseVariableSetter setter = (BaseVariableSetter)property.boxedValue;
 
-            var comparisonProp = property.FindPropertyRelative("m_comparisonType");
+            var setTypeProp = property.FindPropertyRelative("m_setType");
             var bankGuidProp = property.FindPropertyRelative("m_targetBankGuid");
             var targetVarNameProp = property.FindPropertyRelative("m_targetVariableName");
 
@@ -278,7 +275,7 @@ namespace com.absence.variablesystem.editor
             Rect setTypeSelectorRect;
             Rect actualValueRect;
 
-            if(!comparer.HasFixedBank)
+            if (!setter.HasFixedBank)
             {
                 const float k_bankSelector = 8f;
                 const float k_varSelector = 10f;
@@ -317,7 +314,7 @@ namespace com.absence.variablesystem.editor
 
             if (Application.isPlaying) GUI.enabled = false;
 
-            if (!comparer.HasFixedBank)
+            if (!setter.HasFixedBank)
             {
                 var selectedBankIndex = EditorGUI.Popup(bankSelectorRect, VariableBankDatabase.Exists(currentBankGuid) ? VariableBankDatabase.GetIndexOf(currentBankGuid) : 0, VariableBankDatabase.GetBankNameList().ToArray());
                 targetBank = VariableBankDatabase.BanksInAssets[selectedBankIndex];
@@ -347,12 +344,10 @@ namespace com.absence.variablesystem.editor
             if (targetBank.HasBoolean(targetVariableName) || targetBank.HasString(targetVariableName) || targetVariableName == VariableBank.Null)
             {
                 GUI.enabled = false;
-                //if (comparisonProp.enumValueIndex != (int)VariableComparer.ComparisonType.NotEquals) 
-                //    comparisonProp.enumValueIndex = (int)(VariableComparer.ComparisonType.EqualsTo);
-                comparisonProp.enumValueIndex = (int)(BaseVariableComparer.ComparisonType.EqualsTo);
+                setTypeProp.enumValueIndex = (int)(BaseVariableSetter.SetType.SetTo);
             }
 
-            comparisonProp.enumValueIndex = (int)((BaseVariableComparer.ComparisonType)(EditorGUI.EnumPopup(setTypeSelectorRect, (BaseVariableComparer.ComparisonType)comparisonProp.enumValueIndex)));
+            setTypeProp.enumValueIndex = (int)((BaseVariableSetter.SetType)(EditorGUI.EnumPopup(setTypeSelectorRect, (BaseVariableSetter.SetType)setTypeProp.enumValueIndex)));
 
             GUI.enabled = true;
 

@@ -1,11 +1,10 @@
-using com.absence.variablesystem.internals;
 using com.absence.variablesystem.mutations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace com.absence.variablesystem
+namespace com.absence.variablesystem.internals
 {
     /// <summary>
     /// The base class for any type of variable. You can override the effect of mutators by deriving this class. Or you can
@@ -15,6 +14,7 @@ namespace com.absence.variablesystem
     [System.Serializable]
     public abstract class Variable<T> : VariableBase
     {
+        [SerializeField] 
         protected event Action<VariableValueChangedCallbackContext<T>> m_onValueChanged;
 
         [SerializeField] protected string m_name;
@@ -211,15 +211,5 @@ namespace com.absence.variablesystem
         {
             return c.Value;
         }
-    }
-
-    /// <summary>
-    /// Used for the event system of variables.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class VariableValueChangedCallbackContext<T>
-    {
-        public T previousValue { get; set; }
-        public T newValue { get; set; }
     }
 }

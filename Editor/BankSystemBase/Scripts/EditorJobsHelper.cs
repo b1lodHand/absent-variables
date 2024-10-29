@@ -2,7 +2,7 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 
-namespace com.absence.variablesystem.editor
+namespace com.absence.variablesystem.banksystembase.editor
 {
     public static class EditorJobsHelper
     {

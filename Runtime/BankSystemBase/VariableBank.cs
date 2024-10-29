@@ -1,11 +1,12 @@
 using com.absence.variablesystem.builtin;
 using com.absence.variablesystem.imported;
+using com.absence.variablesystem.internals;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace com.absence.variablesystem
+namespace com.absence.variablesystem.banksystembase
 {
     /// <summary>
     /// The scriptable object represents a bank of variables.

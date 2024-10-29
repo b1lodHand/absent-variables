@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace com.absence.variablesystem
+namespace com.absence.variablesystem.banksystembase
 {
     /// <summary>
     /// The base class for setters.
