@@ -27,22 +27,22 @@ namespace com.absence.variablesystem.mutations.builtin
         }
 
 #if CAN_USE_TIMERS
-        public static FloatAdditionMutation CreateForFloat(float value, float duration, AffectionMethod additionType = AffectionMethod.InOrder)
+        public static FloatAdditionMutation CreateTimedForFloat(float value, float duration, AffectionMethod additionType = AffectionMethod.InOrder)
         {
             return new FloatAdditionMutation(value, additionType, duration);
         }
 
-        public static IntegerAdditionMutation CreateForInteger(int value, float duration, AffectionMethod additionType = AffectionMethod.InOrder)
+        public static IntegerAdditionMutation CreateTimedForInteger(int value, float duration, AffectionMethod additionType = AffectionMethod.InOrder)
         {
             return new IntegerAdditionMutation(value, additionType, duration);
         }
 
-        public static Vector2AdditionMutation CreateForVec2(UnityEngine.Vector2 value, float duration, AffectionMethod additionType = AffectionMethod.InOrder)
+        public static Vector2AdditionMutation CreateTimedForVec2(UnityEngine.Vector2 value, float duration, AffectionMethod additionType = AffectionMethod.InOrder)
         {
             return new Vector2AdditionMutation(value, additionType, duration);
         }
 
-        public static Vector3AdditionMutation CreateForVec3(UnityEngine.Vector3 value, float duration, AffectionMethod additionType = AffectionMethod.InOrder)
+        public static Vector3AdditionMutation CreateTimedForVec3(UnityEngine.Vector3 value, float duration, AffectionMethod additionType = AffectionMethod.InOrder)
         {
             return new Vector3AdditionMutation(value, additionType, duration);
         }

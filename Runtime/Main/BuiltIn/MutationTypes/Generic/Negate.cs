@@ -31,27 +31,27 @@ namespace com.absence.variablesystem.mutations.builtin
         }
 
 #if CAN_USE_TIMERS
-        public static FloatNegateMutation CreateForFloat(float value, float duration, AffectionMethod negType = AffectionMethod.InOrder)
+        public static FloatNegateMutation CreateTimedForFloat(float value, float duration, AffectionMethod negType = AffectionMethod.InOrder)
         {
             return new FloatNegateMutation(value, negType, duration);
         }
 
-        public static IntegerNegateMutation CreateForInteger(int value, float duration, AffectionMethod negType = AffectionMethod.InOrder)
+        public static IntegerNegateMutation CreateTimedForInteger(int value, float duration, AffectionMethod negType = AffectionMethod.InOrder)
         {
             return new IntegerNegateMutation(value, negType, duration);
         }
 
-        public static Vector2NegateMutation CreateForVec2(UnityEngine.Vector2 value, float duration, AffectionMethod negType = AffectionMethod.InOrder)
+        public static Vector2NegateMutation CreateTimedForVec2(UnityEngine.Vector2 value, float duration, AffectionMethod negType = AffectionMethod.InOrder)
         {
             return new Vector2NegateMutation(value, negType, duration);
         }
 
-        public static Vector3NegateMutation CreateForVec3(UnityEngine.Vector3 value, float duration, AffectionMethod negType = AffectionMethod.InOrder)
+        public static Vector3NegateMutation CreateTimedForVec3(UnityEngine.Vector3 value, float duration, AffectionMethod negType = AffectionMethod.InOrder)
         {
             return new Vector3NegateMutation(value, negType, duration);
         }
 
-        public static BooleanInvertMutation CreateForBoolean(float duration, AffectionMethod negType = AffectionMethod.InOrder)
+        public static BooleanInvertMutation CreateTimedForBoolean(float duration, AffectionMethod negType = AffectionMethod.InOrder)
         {
             return new BooleanInvertMutation(negType, duration);
         }

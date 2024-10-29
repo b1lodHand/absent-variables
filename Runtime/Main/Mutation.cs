@@ -1,8 +1,9 @@
 #if CAN_USE_TIMERS
 using com.absence.timersystem;
+#endif
+
 using com.absence.variablesystem.internals;
 using UnityEngine;
-#endif
 
 namespace com.absence.variablesystem.mutations.internals
 {

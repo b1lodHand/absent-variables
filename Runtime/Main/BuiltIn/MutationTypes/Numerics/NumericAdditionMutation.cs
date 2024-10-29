@@ -25,9 +25,9 @@ namespace com.absence.variablesystem.mutations.internals
         public FloatAdditionMutation(float mutationValue, AffectionMethod affectionMethod, float duration) : base(mutationValue, affectionMethod, duration)
         {
         }
+#endif
 
         protected override int m_order => 0;
-#endif
 
         public override void OnApply(ref float targetValue)
         {
@@ -63,9 +63,8 @@ namespace com.absence.variablesystem.mutations.internals
         public IntegerAdditionMutation(int mutationValue, AffectionMethod affectionMethod, float duration) : base(mutationValue, affectionMethod, duration)
         {
         }
-
-        protected override int m_order => 0;
 #endif
+        protected override int m_order => 0;
 
         public override void OnApply(ref int targetValue)
         {
