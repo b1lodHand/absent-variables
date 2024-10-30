@@ -93,13 +93,21 @@ namespace com.absence.variablesystem.banksystembase.editor
 
             if (m_banks.Count == 0) return result;
 
+            bool needsRefresh = false;
             m_banks.ForEach(bank =>
             {
+                if (bank == null)
+                {
+                    needsRefresh = true;
+                    return;
+                }
+
                 if (bank.ForExternalUse) return;
 
                 result.Add(bank.name);
             });
 
+            if (needsRefresh) Refresh();
             return result;
         }
     }
