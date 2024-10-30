@@ -317,7 +317,17 @@ namespace com.absence.variablesystem.banksystembase.editor
             if (!setter.HasFixedBank)
             {
                 var selectedBankIndex = EditorGUI.Popup(bankSelectorRect, VariableBankDatabase.Exists(currentBankGuid) ? VariableBankDatabase.GetIndexOf(currentBankGuid) : 0, VariableBankDatabase.GetBankNameList().ToArray());
+
+                if (selectedBankIndex < 0 || selectedBankIndex >= VariableBankDatabase.BanksInAssets.Count)
+                    selectedBankIndex = 0;
+
                 targetBank = VariableBankDatabase.BanksInAssets[selectedBankIndex];
+                if (targetBank == null)
+                {
+                    bankGuidProp.stringValue = string.Empty;
+                    return;
+                }
+
                 bankGuidProp.stringValue = targetBank.Guid;
             }
 
