@@ -17,7 +17,7 @@ namespace com.absence.variablesystem.mutations.internals
         public const int MAX_ORDER = 255;
         public const int MIN_ORDER = 0;
 
-        [field: SerializeField] public T Value { get; private set; }
+        [field: SerializeField] public T Value { get; set; }
         [field: SerializeField] public AffectionMethod AffectionMethod { get; private set; }
         public int Priority
         {
@@ -64,6 +64,7 @@ namespace com.absence.variablesystem.mutations.internals
 #if CAN_USE_TIMERS
             if (InitializedForTimers)
             {
+                if (Timer != null && Timer.IsActive) Timer.Fail();
                 Timer = null;
             }
 #endif
