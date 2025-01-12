@@ -21,6 +21,7 @@ namespace com.absence.variablesystem.internals
         public string Name { get => m_name; protected set => m_name = value; }
 
         [SerializeField] protected T m_value;
+
         public T Value
         {
             get
