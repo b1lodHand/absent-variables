@@ -39,15 +39,9 @@ namespace com.absence.variablesystem.mutations.internals
             m_initialValue = variable.Value;
         }
 
-        public override void OnApply(ref T targetValue)
+        public override T Apply(T initialValue)
         {
-            m_initialValue = targetValue;
-            targetValue = Value;
-        }
-
-        public override void OnRevert(ref T targetValue)
-        {
-            targetValue = m_initialValue;
+            return m_initialValue;
         }
     }
 }

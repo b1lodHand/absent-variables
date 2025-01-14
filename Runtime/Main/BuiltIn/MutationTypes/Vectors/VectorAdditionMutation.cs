@@ -30,16 +30,14 @@ namespace com.absence.variablesystem.mutations.internals
 
         protected override int m_order => 0;
 
-        public override void OnApply(ref Vector2 targetValue)
+        public override Vector2 Apply(Vector2 initialValue)
         {
-            targetValue.x += Value.x;
-            targetValue.y += Value.y;
-        }
+            Vector2 temp = new(initialValue.x, initialValue.y);
 
-        public override void OnRevert(ref Vector2 targetValue)
-        {
-            targetValue.x -= Value.x;
-            targetValue.y -= Value.y;
+            temp.x += Value.x;
+            temp.y += Value.y;
+
+            return temp;
         }
     }
 
@@ -70,18 +68,15 @@ namespace com.absence.variablesystem.mutations.internals
 
         protected override int m_order => 0;
 
-        public override void OnApply(ref Vector3 targetValue)
+        public override Vector3 Apply(Vector3 initialValue)
         {
-            targetValue.x += Value.x;
-            targetValue.y += Value.y;
-            targetValue.z += Value.z;
-        }
+            Vector3 temp = new(initialValue.x, initialValue.y, initialValue.z);
 
-        public override void OnRevert(ref Vector3 targetValue)
-        {
-            targetValue.x -= Value.x;
-            targetValue.y -= Value.y;
-            targetValue.z -= Value.z;
+            temp.x += Value.x;
+            temp.y += Value.y;
+            temp.z += Value.z;
+
+            return temp;
         }
     }
 }

@@ -70,8 +70,7 @@ namespace com.absence.variablesystem.mutations.internals
 #endif
         }
 
-        public abstract void OnApply(ref T targetValue);
-        public abstract void OnRevert(ref T targetValue);
+        public abstract T Apply(T initialValue);
 
         public Mutation() { }
 

@@ -29,14 +29,9 @@ namespace com.absence.variablesystem.mutations.internals
 
         protected override int m_order => 0;
 
-        public override void OnApply(ref float targetValue)
+        public override float Apply(float initialValue)
         {
-            targetValue += Value;
-        }
-
-        public override void OnRevert(ref float targetValue)
-        {
-            targetValue -= Value;
+            return initialValue + Value;
         }
     }
 
@@ -66,14 +61,9 @@ namespace com.absence.variablesystem.mutations.internals
 #endif
         protected override int m_order => 0;
 
-        public override void OnApply(ref int targetValue)
+        public override int Apply(int initialValue)
         {
-            targetValue += Value;
-        }
-
-        public override void OnRevert(ref int targetValue)
-        {
-            targetValue -= Value;
+            return initialValue + Value;
         }
     }
 }

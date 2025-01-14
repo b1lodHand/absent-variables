@@ -48,15 +48,15 @@ namespace com.absence.variablesystem.banksystembase
             }
         }
 
-        [SerializeField] protected List<Integer> m_ints = new();
-        [SerializeField] protected List<Float> m_floats = new();
-        [SerializeField] protected List<builtin.String> m_strings = new();
-        [SerializeField] protected List<builtin.Boolean> m_booleans = new();
+        [SerializeField] protected List<IntegerVariable> m_ints = new();
+        [SerializeField] protected List<FloatVariable> m_floats = new();
+        [SerializeField] protected List<builtin.StringVariable> m_strings = new();
+        [SerializeField] protected List<builtin.BooleanVariable> m_booleans = new();
 
         /// <summary>
         /// All of the integer variables within this bank.
         /// </summary>
-        public List<Integer> Ints 
+        public List<IntegerVariable> Ints 
         { 
             get 
             { 
@@ -72,7 +72,7 @@ namespace com.absence.variablesystem.banksystembase
         /// <summary>
         /// All of the floating point variables within this bank.
         /// </summary>
-        public List<Float> Floats
+        public List<FloatVariable> Floats
         {
             get
             {
@@ -88,7 +88,7 @@ namespace com.absence.variablesystem.banksystembase
         /// <summary>
         /// All of the string variables within this bank.
         /// </summary>
-        public List<builtin.String> Strings
+        public List<builtin.StringVariable> Strings
         {
             get
             {
@@ -104,7 +104,7 @@ namespace com.absence.variablesystem.banksystembase
         /// <summary>
         /// All of the boolean variables within this bank.
         /// </summary>
-        public List<builtin.Boolean> Booleans
+        public List<builtin.BooleanVariable> Booleans
         {
             get
             {
@@ -183,7 +183,7 @@ namespace com.absence.variablesystem.banksystembase
             variableName = TrimVariableNameType(variableName);
             value = 0;
 
-            List<Integer> check = m_ints.Where(v => v.Name == variableName).ToList();
+            List<IntegerVariable> check = m_ints.Where(v => v.Name == variableName).ToList();
             if (check.Count == 0) return false;
 
             value = check.FirstOrDefault().Value;
@@ -201,7 +201,7 @@ namespace com.absence.variablesystem.banksystembase
             variableName = TrimVariableNameType(variableName);
             value = 0f;
 
-            List<Float> check = m_floats.Where(v => v.Name == variableName).ToList();
+            List<FloatVariable> check = m_floats.Where(v => v.Name == variableName).ToList();
             if (check.Count == 0) return false;
 
             value = check.FirstOrDefault().Value;
@@ -219,7 +219,7 @@ namespace com.absence.variablesystem.banksystembase
             variableName = TrimVariableNameType(variableName);
             value = string.Empty;
 
-            List<builtin.String> check = m_strings.Where(v => v.Name == variableName).ToList();
+            List<builtin.StringVariable> check = m_strings.Where(v => v.Name == variableName).ToList();
             if (check.Count == 0) return false;
 
             value = check.FirstOrDefault().Value;
@@ -237,7 +237,7 @@ namespace com.absence.variablesystem.banksystembase
             variableName = TrimVariableNameType(variableName);
             value = false;
 
-            List<builtin.Boolean> check = m_booleans.Where(v => v.Name == variableName).ToList();
+            List<builtin.BooleanVariable> check = m_booleans.Where(v => v.Name == variableName).ToList();
             if (check.Count == 0) return false;
 
             value = check.FirstOrDefault().Value;
@@ -253,7 +253,7 @@ namespace com.absence.variablesystem.banksystembase
         {
             variableName = TrimVariableNameType(variableName);
 
-            List<Integer> check = m_ints.Where(v => v.Name == variableName).ToList();
+            List<IntegerVariable> check = m_ints.Where(v => v.Name == variableName).ToList();
             if (check.Count == 0) return;
 
             check.FirstOrDefault().AddValueChangeListener(callbackAction);
@@ -268,7 +268,7 @@ namespace com.absence.variablesystem.banksystembase
         {
             variableName = TrimVariableNameType(variableName);
 
-            List<Float> check = m_floats.Where(v => v.Name == variableName).ToList();
+            List<FloatVariable> check = m_floats.Where(v => v.Name == variableName).ToList();
             if (check.Count == 0) return;
 
             check.FirstOrDefault().AddValueChangeListener(callbackAction);
@@ -283,7 +283,7 @@ namespace com.absence.variablesystem.banksystembase
         {
             variableName = TrimVariableNameType(variableName);
 
-            List<builtin.String> check = m_strings.Where(v => v.Name == variableName).ToList();
+            List<builtin.StringVariable> check = m_strings.Where(v => v.Name == variableName).ToList();
             if (check.Count == 0) return;
 
             check.FirstOrDefault().AddValueChangeListener(callbackAction);
@@ -298,7 +298,7 @@ namespace com.absence.variablesystem.banksystembase
         {
             variableName = TrimVariableNameType(variableName);
 
-            List<builtin.Boolean> check = m_booleans.Where(v => v.Name == variableName).ToList();
+            List<builtin.BooleanVariable> check = m_booleans.Where(v => v.Name == variableName).ToList();
             if (check.Count == 0) return;
 
             check.FirstOrDefault().AddValueChangeListener(callbackAction);
@@ -317,7 +317,7 @@ namespace com.absence.variablesystem.banksystembase
             var found = m_ints.Where(v => v.Name == variableName).FirstOrDefault();
             if(found == null) return false;
 
-            found.Value = newValue;
+            found.UnderlyingValue = newValue;
             return true;
         }
 
@@ -334,7 +334,7 @@ namespace com.absence.variablesystem.banksystembase
             var found = m_floats.Where(v => v.Name == variableName).FirstOrDefault();
             if (found == null) return false;
 
-            found.Value = newValue;
+            found.UnderlyingValue = newValue;
             return true;
         }
 
@@ -351,7 +351,7 @@ namespace com.absence.variablesystem.banksystembase
             var found = m_strings.Where(v => v.Name == variableName).FirstOrDefault();
             if (found == null) return false;
 
-            found.Value = newValue;
+            found.UnderlyingValue = new(newValue);
             return true;
         }
 
@@ -368,7 +368,7 @@ namespace com.absence.variablesystem.banksystembase
             var found = m_booleans.Where(v => v.Name == variableName).FirstOrDefault();
             if (found == null) return false;
 
-            found.Value = newValue;
+            found.UnderlyingValue = newValue;
             return true;
         }
 

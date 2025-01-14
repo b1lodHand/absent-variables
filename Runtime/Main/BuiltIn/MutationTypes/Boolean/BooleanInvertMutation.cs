@@ -26,14 +26,9 @@ namespace com.absence.variablesystem.mutations.internals
 
         protected override int m_order => 0;
 
-        public override void OnApply(ref bool targetValue)
+        public override bool Apply(bool initialValue)
         {
-            targetValue = !targetValue;
-        }
-
-        public override void OnRevert(ref bool targetValue)
-        {
-            targetValue = !targetValue;
+            return !initialValue;
         }
     }
 }

@@ -20,13 +20,24 @@ namespace com.absence.variablesystem.internals
         [SerializeField] protected string m_name;
         public string Name { get => m_name; protected set => m_name = value; }
 
+        [SerializeField] protected T m_underlyingValue;
         [SerializeField] protected T m_value;
+
+        public List<Mutation<T>> MutationsInOrder => m_mutations.OrderBy(mut => mut.Priority).ToList();
 
         public T Value
         {
             get
             {
                 return m_value;
+            }
+        }
+
+        public T UnderlyingValue
+        {
+            get
+            {
+                return m_underlyingValue;
             }
 
             set
@@ -45,8 +56,10 @@ namespace com.absence.variablesystem.internals
         public Variable(string name, T value)
         {
             this.m_name = name;
-            this.m_value = value;
+            this.m_underlyingValue = value;
             this.m_bypassEvents = false;
+
+            Refresh();
         }
 
         [SerializeField] protected List<Mutation<T>> m_mutations = new List<Mutation<T>>();
@@ -57,29 +70,24 @@ namespace com.absence.variablesystem.internals
         /// <param name="mutation"></param>
         public void Mutate(Mutation<T> mutation)
         {
-            RevertMutations();
-
             m_mutations.Add(mutation);
             mutation.OnAdd(this);
 
-            ApplyMutations();
+            Refresh();
         }
-
         /// <summary>
         /// Remove a specific mutation from this variable.
         /// </summary>
         /// <param name="mutation"></param>
         public void Immutate(Mutation<T> mutation)
         {
-            RevertMutations();
-
             if (m_mutations.Contains(mutation))
             {
                 mutation.OnRemove(this);
                 m_mutations.Remove(mutation);
             }
 
-            ApplyMutations();
+            Refresh();
         }
 
         /// <summary>
@@ -87,60 +95,21 @@ namespace com.absence.variablesystem.internals
         /// </summary>
         public void ClearMutations()
         {
-            RevertMutations();
             m_mutations.Clear();
-            ApplyMutations();
+            Refresh();
         }
-
+        /// <summary>
+        /// Use to fetch <see cref="Value"/> according to the current modifiers.
+        /// </summary>
         public void Refresh()
         {
-            RevertMutations();
             ApplyMutations();
-        }
-
-        public void Set(T value, SetType setType = SetType.Baked)
-        {
-            switch (setType)
-            {
-                case SetType.Raw:
-                    SetRaw(value);
-                    break;
-                case SetType.Baked:
-                    SetBaked(value);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        protected virtual void SetRaw(T value)
-        {
-            T val = m_value;
-
-            RevertMutations();
-
-            m_value = value;
-
-            ApplyMutations();
-
-            RaiseValueChangeEvent(val, m_value);
-        }
-
-        protected virtual void SetBaked(T value)
-        {
-            T val = m_value;
-            m_value = value;
-
-            Refresh();
-
-            RaiseValueChangeEvent(val, m_value);
         }
 
         protected void CopyMutations(Variable<T> copyFrom)
         {
             m_mutations = new List<Mutation<T>>(copyFrom.m_mutations);
         }
-
         protected T1 WithMutationsOf<T1>(T1 other) where T1 : Variable<T>
         {
             CopyMutations(other);
@@ -148,26 +117,13 @@ namespace com.absence.variablesystem.internals
             return (T1)this;
         }
 
-        /// <summary>
-        /// Use to define how this variable subtype handles the reverting process of mutations.
-        /// </summary>
-        protected virtual void RevertMutations()
+        public void SetUnderlyingValueWithoutCallbacks(T newValue)
         {
-            T val = m_value;
-            m_mutations.OrderByDescending(mut => mut.Priority).ToList().ForEach(mut2 => mut2.OnRevert(ref m_value));
+            DisableValueChangeCallbacks();
 
-            RaiseValueChangeEvent(val, Value);
-        }
+            SetRaw(newValue);
 
-        /// <summary>
-        /// Use to define how this variable subtype handles the applying process of mutations.
-        /// </summary>
-        protected virtual void ApplyMutations()
-        {
-            T val = m_value;
-            m_mutations.OrderBy(mut => mut.Priority).ToList().ForEach(mut2 => mut2.OnApply(ref m_value));
-
-            RaiseValueChangeEvent(val, Value);
+            EnableValueChangeCallbacks();
         }
 
         /// <summary>
@@ -178,7 +134,6 @@ namespace com.absence.variablesystem.internals
         {
             m_onValueChanged += evt;
         }
-
         /// <summary>
         /// Remove the notification you've added.
         /// </summary>
@@ -188,8 +143,33 @@ namespace com.absence.variablesystem.internals
             m_onValueChanged -= evt;
         }
 
-        public void DisableValueChangeCallbacks() => m_bypassEvents = true;
-        public void EnableValueChangeCallbacks() => m_bypassEvents = false;
+        internal void DisableValueChangeCallbacks() => m_bypassEvents = true;
+        internal void EnableValueChangeCallbacks() => m_bypassEvents = false;
+
+        protected virtual void SetRaw(T value)
+        {
+            T val = m_underlyingValue;
+            m_underlyingValue = value;
+
+            Refresh();
+
+            RaiseValueChangeEvent(val, Value);
+        }
+        protected virtual void ApplyMutations()
+        {
+            List<Mutation<T>> mutations = MutationsInOrder;
+
+            T val = m_underlyingValue;
+            for (int i = 0; i < mutations.Count; i++)
+            {
+                Mutation<T> current = mutations[i];
+                val = current.Apply(val);
+            }
+
+            m_value = val;
+
+            RaiseValueChangeEvent(val, Value);
+        }
         protected void RaiseValueChangeEvent(T previousValue, T currentValue)
         {
             if (m_bypassEvents) return;
@@ -206,11 +186,6 @@ namespace com.absence.variablesystem.internals
         public virtual bool ValueEquals(Variable<T> other)
         {
             return this.Value.Equals(other.Value);
-        }
-
-        public static implicit operator T(Variable<T> c)
-        {
-            return c.Value;
         }
     }
 }
