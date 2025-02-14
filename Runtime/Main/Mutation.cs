@@ -1,5 +1,7 @@
 #if CAN_USE_TIMERS
 using com.absence.timersystem;
+using com.absence.timersystem.internals;
+
 #endif
 
 using com.absence.variablesystem.internals;
@@ -42,9 +44,10 @@ namespace com.absence.variablesystem.mutations.internals
         protected abstract int m_order { get; }
 
 #if CAN_USE_TIMERS
-        [field: SerializeField] public float Duration { get; private set; }
-        [field: SerializeField] public Timer Timer { get; private set; }
-        [field: SerializeField] public bool InitializedForTimers { get; private set; }
+        [field: SerializeField] public float Duration { get; protected set; }
+        [field: SerializeField] public ITimer Timer { get; protected set; }
+        [field: SerializeField] public bool InitializedForTimers { get; protected set; }
+        [field: SerializeField] public TimerManager TimerManagerUsed { get; protected set; }
 #endif
 
         public virtual void OnAdd(Variable<T> variable)
@@ -52,9 +55,8 @@ namespace com.absence.variablesystem.mutations.internals
 #if CAN_USE_TIMERS
             if (InitializedForTimers) 
             {
-                Timer = Timer.Create(Duration);
-                Timer.OnComplete += (s) => variable.Immutate(this);
-                Timer.Start();
+                Timer = absence.timersystem.Timer.Create(Duration);
+                Timer.onComplete += (s) => variable.Immutate(this);
             }
 #endif
         }
@@ -64,7 +66,7 @@ namespace com.absence.variablesystem.mutations.internals
 #if CAN_USE_TIMERS
             if (InitializedForTimers)
             {
-                if (Timer != null && Timer.IsActive) Timer.Fail();
+                if (Timer != null && !Timer.HasCompleted) Timer.Fail();
                 Timer = null;
             }
 #endif
@@ -87,20 +89,26 @@ namespace com.absence.variablesystem.mutations.internals
         }
 
 #if CAN_USE_TIMERS
-        public Mutation(T mutationValue, float duration)
+        public Mutation(T mutationValue, float duration, TimerManager manager = null)
         {
             Value = mutationValue;
             Duration = duration;
             AffectionMethod = AffectionMethod.InOrder;
 
+            if (manager == null) manager = TimerManager.Instance;
+            TimerManagerUsed = manager;
+
             InitializedForTimers = true;
         }
 
-        public Mutation(T mutationValue, AffectionMethod affectionMethod, float duration)
+        public Mutation(T mutationValue, AffectionMethod affectionMethod, float duration, TimerManager manager = null)
         {
             Value = mutationValue;
             Duration = duration;
             AffectionMethod = affectionMethod;
+
+            if (manager == null) manager = TimerManager.Instance;
+            TimerManagerUsed = manager;
 
             InitializedForTimers = true;
         }
