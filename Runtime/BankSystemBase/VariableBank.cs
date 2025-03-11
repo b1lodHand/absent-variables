@@ -197,25 +197,49 @@ namespace com.absence.variablesystem.banksystembase
             return result;
         }
 
-        public IntegerVariable GetInt(string variableName)
+        public int GetInt(string variableName)
+        {
+            variableName = TrimVariableNameType(variableName);
+            return FindVariableOrNull(variableName, m_ints).Value;
+        }
+
+        public float GetFloat(string variableName)
+        {
+            variableName = TrimVariableNameType(variableName);
+            return FindVariableOrNull(variableName, m_floats).Value;
+        }
+
+        public string GetString(string variableName)
+        {
+            variableName = TrimVariableNameType(variableName);
+            return FindVariableOrNull(variableName, m_strings).Value;
+        }
+
+        public bool GetBoolean(string variableName)
+        {
+            variableName = TrimVariableNameType(variableName);
+            return FindVariableOrNull(variableName, m_booleans).Value;
+        }
+
+        public IntegerVariable GetIntVariable(string variableName)
         {
             variableName = TrimVariableNameType(variableName);
             return FindVariableOrNull(variableName, m_ints);
         }
 
-        public FloatVariable GetFloat(string variableName)
+        public FloatVariable GetFloatVariable(string variableName)
         {
             variableName = TrimVariableNameType(variableName);
             return FindVariableOrNull(variableName, m_floats);
         }
 
-        public StringVariable GetString(string variableName)
+        public StringVariable GetStringVariable(string variableName)
         {
             variableName = TrimVariableNameType(variableName);
             return FindVariableOrNull(variableName, m_strings);
         }
 
-        public BooleanVariable GetBoolean(string variableName)
+        public BooleanVariable GetBooleanVariable(string variableName)
         {
             variableName = TrimVariableNameType(variableName);
             return FindVariableOrNull(variableName, m_booleans);
@@ -277,65 +301,53 @@ namespace com.absence.variablesystem.banksystembase
             return result;
         }
 
-        ///// <summary>
-        ///// Use to add a value change callback to an integer variable with a specific name.
-        ///// </summary>
-        ///// <param name="variableName">Target name.</param>
-        ///// <param name="callbackAction">What to do when value of the variable changes.</param>
-        //public void AddValueChangeListenerToInt(string variableName, Action<VariableValueChangedCallbackContext<int>> callbackAction)
-        //{
-        //    variableName = TrimVariableNameType(variableName);
+        /// <summary>
+        /// Use to add a value change callback to an integer variable with a specific name.
+        /// </summary>
+        /// <param name="variableName">Target name.</param>
+        /// <param name="callbackAction">What to do when value of the variable changes.</param>
+        public void AddValueChangeListenerToInt(string variableName, Action<VariableValueChangedCallbackContext<int>> callbackAction)
+        {
+            variableName = TrimVariableNameType(variableName);
+            var target = FindVariableOrNull(variableName, m_ints);
+            target.AddValueChangeListener(callbackAction);
+        }
 
-        //    List<IntegerVariable> check = m_ints.Where(v => v.Name == variableName).ToList();
-        //    if (check.Count == 0) return;
+        /// <summary>
+        /// Use to add a value change callback to a floating point variable with a specific name.
+        /// </summary>
+        /// <param name="variableName">Target name.</param>
+        /// <param name="callbackAction">What to do when value of the variable changes.</param>
+        public void AddValueChangeListenerToFloat(string variableName, Action<VariableValueChangedCallbackContext<float>> callbackAction)
+        {
+            variableName = TrimVariableNameType(variableName);
+            var target = FindVariableOrNull(variableName, m_floats);
+            target.AddValueChangeListener(callbackAction);
+        }
 
-        //    check.FirstOrDefault().AddValueChangeListener(callbackAction);
-        //}
+        /// <summary>
+        /// Use to add a value change callback to a string variable with a specific name.
+        /// </summary>
+        /// <param name="variableName">Target name.</param>
+        /// <param name="callbackAction">What to do when value of the variable changes.</param>
+        public void AddValueChangeListenerToString(string variableName, Action<VariableValueChangedCallbackContext<string>> callbackAction)
+        {
+            variableName = TrimVariableNameType(variableName);
+            var target = FindVariableOrNull(variableName, m_strings);
+            target.AddValueChangeListener(callbackAction);
+        }
 
-        ///// <summary>
-        ///// Use to add a value change callback to a floating point variable with a specific name.
-        ///// </summary>
-        ///// <param name="variableName">Target name.</param>
-        ///// <param name="callbackAction">What to do when value of the variable changes.</param>
-        //public void AddValueChangeListenerToFloat(string variableName, Action<VariableValueChangedCallbackContext<float>> callbackAction)
-        //{
-        //    variableName = TrimVariableNameType(variableName);
-
-        //    List<FloatVariable> check = m_floats.Where(v => v.Name == variableName).ToList();
-        //    if (check.Count == 0) return;
-
-        //    check.FirstOrDefault().AddValueChangeListener(callbackAction);
-        //}
-
-        ///// <summary>
-        ///// Use to add a value change callback to a string variable with a specific name.
-        ///// </summary>
-        ///// <param name="variableName">Target name.</param>
-        ///// <param name="callbackAction">What to do when value of the variable changes.</param>
-        //public void AddValueChangeListenerToString(string variableName, Action<VariableValueChangedCallbackContext<string>> callbackAction)
-        //{
-        //    variableName = TrimVariableNameType(variableName);
-
-        //    List<builtin.StringVariable> check = m_strings.Where(v => v.Name == variableName).ToList();
-        //    if (check.Count == 0) return;
-
-        //    check.FirstOrDefault().AddValueChangeListener(callbackAction);
-        //}
-
-        ///// <summary>
-        ///// Use to add a value change callback to a boolean variable with a specific name.
-        ///// </summary>
-        ///// <param name="variableName">Target name.</param>
-        ///// <param name="callbackAction">What to do when value of the variable changes.</param>
-        //public void AddValueChangeListenerToBoolean(string variableName, Action<VariableValueChangedCallbackContext<bool>> callbackAction)
-        //{
-        //    variableName = TrimVariableNameType(variableName);
-
-        //    List<builtin.BooleanVariable> check = m_booleans.Where(v => v.Name == variableName).ToList();
-        //    if (check.Count == 0) return;
-
-        //    check.FirstOrDefault().AddValueChangeListener(callbackAction);
-        //}
+        /// <summary>
+        /// Use to add a value change callback to a boolean variable with a specific name.
+        /// </summary>
+        /// <param name="variableName">Target name.</param>
+        /// <param name="callbackAction">What to do when value of the variable changes.</param>
+        public void AddValueChangeListenerToBoolean(string variableName, Action<VariableValueChangedCallbackContext<bool>> callbackAction)
+        {
+            variableName = TrimVariableNameType(variableName);
+            var target = FindVariableOrNull(variableName, m_booleans);
+            target.AddValueChangeListener(callbackAction);
+        }
 
         /// <summary>
         /// Use to change an integer variable's value.
@@ -472,7 +484,7 @@ namespace com.absence.variablesystem.banksystembase
             return clone;
         }
 
-        public OptimizedVariableBankHandle GetOptimizedHandle()
+        public OptimizedVariableBankHandle CreateOptimizedHandle()
         {
             return new OptimizedVariableBankHandle(this);
         }

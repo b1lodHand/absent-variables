@@ -52,22 +52,42 @@ namespace com.absence.variablesystem.banksystembase
             }
         }
 
-        public BooleanVariable GetBoolean(string variableName)
+        public bool GetBoolean(string variableName)
+        {
+            return m_booleans[variableName].Value;
+        }
+
+        public float GetFloat(string variableName)
+        {
+            return m_floats[variableName].Value;
+        }
+
+        public int GetInt(string variableName)
+        {
+            return m_ints[variableName].Value;
+        }
+
+        public string GetString(string variableName)
+        {
+            return m_strings[variableName].Value;
+        }
+
+        public BooleanVariable GetBooleanVariable(string variableName)
         {
             return m_booleans[variableName];
         }
 
-        public FloatVariable GetFloat(string variableName)
+        public FloatVariable GetFloatVariable(string variableName)
         {
             return m_floats[variableName];
         }
 
-        public IntegerVariable GetInt(string variableName)
+        public IntegerVariable GetIntVariable(string variableName)
         {
             return m_ints[variableName];
         }
 
-        public StringVariable GetString(string variableName)
+        public StringVariable GetStringVariable(string variableName)
         {
             return m_strings[variableName];
         }
@@ -158,6 +178,26 @@ namespace com.absence.variablesystem.banksystembase
             if (result) value = str.Value;
 
             return result;
+        }
+
+        public void AddValueChangeListenerToInt(string variableName, Action<VariableValueChangedCallbackContext<int>> callbackAction)
+        {
+            m_ints[variableName].AddValueChangeListener(callbackAction);
+        }
+
+        public void AddValueChangeListenerToFloat(string variableName, Action<VariableValueChangedCallbackContext<float>> callbackAction)
+        {
+            m_floats[variableName].AddValueChangeListener(callbackAction);
+        }
+
+        public void AddValueChangeListenerToString(string variableName, Action<VariableValueChangedCallbackContext<string>> callbackAction)
+        {
+            m_strings[variableName].AddValueChangeListener(callbackAction);
+        }
+
+        public void AddValueChangeListenerToBoolean(string variableName, Action<VariableValueChangedCallbackContext<bool>> callbackAction)
+        {
+            m_booleans[variableName].AddValueChangeListener(callbackAction);
         }
     }
 }
