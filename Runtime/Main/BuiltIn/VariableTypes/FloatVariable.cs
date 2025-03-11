@@ -8,7 +8,7 @@ namespace com.absence.variablesystem.builtin
         #region Constructors
         public FloatVariable() : base() { }
 
-        public FloatVariable(string name, float value) : base(name, value)
+        public FloatVariable(float value) : base(value)
         {
         }
         #endregion
@@ -16,7 +16,7 @@ namespace com.absence.variablesystem.builtin
         #region Conversions
         public static implicit operator FloatVariable(float v)
         {
-            return new FloatVariable("", v);
+            return new FloatVariable(v);
         }
 
         public static explicit operator float(FloatVariable f)

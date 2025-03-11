@@ -10,7 +10,7 @@ namespace com.absence.variablesystem.builtin
         {
         }
 
-        public StringVariable(string name, string value) : base(name, value)
+        public StringVariable(string value) : base(value)
         {
 
         }
@@ -19,7 +19,7 @@ namespace com.absence.variablesystem.builtin
         #region Conversions
         public static implicit operator StringVariable(string v)
         {
-            return new StringVariable("", v);
+            return new StringVariable(v);
         }
 
         public static explicit operator string(StringVariable c)

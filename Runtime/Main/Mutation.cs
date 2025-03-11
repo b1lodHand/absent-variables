@@ -1,13 +1,12 @@
 #if CAN_USE_TIMERS
 using com.absence.timersystem;
 using com.absence.timersystem.internals;
-
 #endif
 
 using com.absence.variablesystem.internals;
 using UnityEngine;
 
-namespace com.absence.variablesystem.mutations.internals
+namespace com.absence.variablesystem.mutations
 {
     /// <summary>
     /// Used for changing a variable's value with a reference on that change. With this, you can revert any of your changes after in game.

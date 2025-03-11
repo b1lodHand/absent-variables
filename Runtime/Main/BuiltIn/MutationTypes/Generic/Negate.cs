@@ -1,7 +1,6 @@
 using com.absence.variablesystem.mutations.internals;
-using com.absence.variablesystem.internals;
 
-namespace com.absence.variablesystem.mutations.builtin
+namespace com.absence.variablesystem.mutations
 {
     public static class Negate
     {

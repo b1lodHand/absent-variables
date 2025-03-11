@@ -11,7 +11,7 @@ namespace com.absence.variablesystem.builtin
         {
         }
 
-        public Vector3Variable(string name, Vector3 value) : base(name, value)
+        public Vector3Variable(Vector3 value) : base(value)
         {
 
         }
@@ -20,7 +20,7 @@ namespace com.absence.variablesystem.builtin
         #region Conversions
         public static implicit operator Vector3Variable(Vector3 v)
         {
-            return new Vector3Variable("", v);
+            return new Vector3Variable(v);
         }
 
         public static explicit operator Vector3(Vector3Variable f)

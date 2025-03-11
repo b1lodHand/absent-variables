@@ -1,7 +1,7 @@
 using com.absence.variablesystem.internals;
 using com.absence.variablesystem.mutations.internals;
 
-namespace com.absence.variablesystem.mutations.builtin
+namespace com.absence.variablesystem.mutations
 {
     [System.Serializable]
     public static class Add

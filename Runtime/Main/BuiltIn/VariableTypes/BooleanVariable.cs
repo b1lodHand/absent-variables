@@ -1,5 +1,3 @@
-using com.absence.variablesystem.internals;
-
 namespace com.absence.variablesystem.builtin
 {
     [System.Serializable]
@@ -10,7 +8,7 @@ namespace com.absence.variablesystem.builtin
         {
         }
 
-        public BooleanVariable(string name, bool value) : base(name, value)
+        public BooleanVariable(bool value) : base(value)
         {
         }
         #endregion
@@ -18,7 +16,7 @@ namespace com.absence.variablesystem.builtin
         #region Conversions
         public static implicit operator BooleanVariable(bool v)
         {
-            return new BooleanVariable("", v);
+            return new BooleanVariable(v);
         }
 
         public static explicit operator bool(BooleanVariable f)

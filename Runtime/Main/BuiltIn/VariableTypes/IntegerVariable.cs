@@ -8,7 +8,7 @@ namespace com.absence.variablesystem.builtin
         #region Constructors
         public IntegerVariable() { }
 
-        public IntegerVariable(string name, int value) : base(name, value)
+        public IntegerVariable(int value) : base(value)
         {
         }
         #endregion
@@ -16,7 +16,7 @@ namespace com.absence.variablesystem.builtin
         #region Conversions
         public static implicit operator IntegerVariable(int v)
         {
-            return new IntegerVariable("", v);
+            return new IntegerVariable(v);
         }
 
         public static explicit operator int(IntegerVariable f)

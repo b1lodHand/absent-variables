@@ -11,7 +11,7 @@ namespace com.absence.variablesystem.banksystembase
     /// <summary>
     /// The scriptable object represents a bank of variables.
     /// </summary>
-    public class VariableBank : ScriptableObject
+    public class VariableBank : ScriptableObject, IPrimitiveVariableContainer
     {
         /// <summary>
         /// A constant string that represents a null variable name (with the prefix).
@@ -48,15 +48,15 @@ namespace com.absence.variablesystem.banksystembase
             }
         }
 
-        [SerializeField] protected List<IntegerVariable> m_ints = new();
-        [SerializeField] protected List<FloatVariable> m_floats = new();
-        [SerializeField] protected List<builtin.StringVariable> m_strings = new();
-        [SerializeField] protected List<builtin.BooleanVariable> m_booleans = new();
+        [SerializeField] protected List<VariableNamePair<int, IntegerVariable>> m_ints = new();
+        [SerializeField] protected List<VariableNamePair<float, FloatVariable>> m_floats = new();
+        [SerializeField] protected List<VariableNamePair<string, StringVariable>> m_strings = new();
+        [SerializeField] protected List<VariableNamePair<bool, BooleanVariable>> m_booleans = new();
 
         /// <summary>
         /// All of the integer variables within this bank.
         /// </summary>
-        public List<IntegerVariable> Ints 
+        public List<VariableNamePair<int, IntegerVariable>> Ints 
         { 
             get 
             { 
@@ -72,7 +72,7 @@ namespace com.absence.variablesystem.banksystembase
         /// <summary>
         /// All of the floating point variables within this bank.
         /// </summary>
-        public List<FloatVariable> Floats
+        public List<VariableNamePair<float, FloatVariable>> Floats
         {
             get
             {
@@ -88,7 +88,7 @@ namespace com.absence.variablesystem.banksystembase
         /// <summary>
         /// All of the string variables within this bank.
         /// </summary>
-        public List<builtin.StringVariable> Strings
+        public List<VariableNamePair<string, StringVariable>> Strings
         {
             get
             {
@@ -104,7 +104,7 @@ namespace com.absence.variablesystem.banksystembase
         /// <summary>
         /// All of the boolean variables within this bank.
         /// </summary>
-        public List<builtin.BooleanVariable> Booleans
+        public List<VariableNamePair<bool, BooleanVariable>> Booleans
         {
             get
             {
@@ -140,14 +140,27 @@ namespace com.absence.variablesystem.banksystembase
         /// <returns>A list of variable names. Example: "example_int"</returns>
         public List<string> GetAllVariableNames()
         {
-            var totalCount = m_ints.Count + m_floats.Count + m_strings.Count + m_booleans.Count;
-            var result = new List<string>();
-            if (totalCount == 0) return result;
+            List<string> result = new();
 
-            m_ints.ConvertAll(v => v.Name).ToList().ForEach(k => result.Add(k));
-            m_floats.ConvertAll(v => v.Name).ToList().ForEach(k => result.Add(k));
-            m_strings.ConvertAll(v => v.Name).ToList().ForEach(k => result.Add(k));
-            m_booleans.ConvertAll(v => v.Name).ToList().ForEach(k => result.Add(k));
+            foreach (var integerVariable in m_ints) 
+            {
+                result.Add(integerVariable.Name);
+            }
+
+            foreach (var floatVariable in m_floats)
+            {
+                result.Add(floatVariable.Name);
+            }
+
+            foreach (var stringVariable in m_strings)
+            {
+                result.Add(stringVariable.Name);
+            }
+
+            foreach (var booleanVariable in m_booleans)
+            {
+                result.Add(booleanVariable.Name);
+            }
 
             return result;
         }
@@ -159,18 +172,54 @@ namespace com.absence.variablesystem.banksystembase
         /// <returns>A list of all variable names with the prefixes. Example: "int: example_int"</returns>
         public List<string> GetAllVariableNamesWithTypes()
         {
-            var totalCount = m_ints.Count + m_floats.Count + m_strings.Count + m_booleans.Count;
-            var result = new List<string>();
-            if (totalCount == 0) return result;
+            List<string> result = new();
 
-            m_ints.ConvertAll(v => v.Name).ToList().ForEach(k => result.Add($"int: {k}"));
-            m_floats.ConvertAll(v => v.Name).ToList().ForEach(k => result.Add($"float: {k}"));
-            m_strings.ConvertAll(v => v.Name).ToList().ForEach(k => result.Add($"string: {k}"));
-            m_booleans.ConvertAll(v => v.Name).ToList().ForEach(k => result.Add($"bool: {k}"));
+            foreach (var integerVariable in m_ints)
+            {
+                result.Add("int: " + integerVariable.Name);
+            }
+
+            foreach (var floatVariable in m_floats)
+            {
+                result.Add("float: " + floatVariable.Name);
+            }
+
+            foreach (var stringVariable in m_strings)
+            {
+                result.Add("string: " + stringVariable.Name);
+            }
+
+            foreach (var booleanVariable in m_booleans)
+            {
+                result.Add("bool: " + booleanVariable.Name);
+            }
 
             return result;
         }
 
+        public IntegerVariable GetInt(string variableName)
+        {
+            variableName = TrimVariableNameType(variableName);
+            return FindVariableOrNull(variableName, m_ints);
+        }
+
+        public FloatVariable GetFloat(string variableName)
+        {
+            variableName = TrimVariableNameType(variableName);
+            return FindVariableOrNull(variableName, m_floats);
+        }
+
+        public StringVariable GetString(string variableName)
+        {
+            variableName = TrimVariableNameType(variableName);
+            return FindVariableOrNull(variableName, m_strings);
+        }
+
+        public BooleanVariable GetBoolean(string variableName)
+        {
+            variableName = TrimVariableNameType(variableName);
+            return FindVariableOrNull(variableName, m_booleans);
+        }
 
         /// <summary>
         /// Use to get value of an integer variable within this bank.
@@ -181,13 +230,9 @@ namespace com.absence.variablesystem.banksystembase
         public bool TryGetInt(string variableName, out int value)
         {
             variableName = TrimVariableNameType(variableName);
-            value = 0;
+            bool result = TryFindVariable(variableName, m_ints, out value);
 
-            List<IntegerVariable> check = m_ints.Where(v => v.Name == variableName).ToList();
-            if (check.Count == 0) return false;
-
-            value = check.FirstOrDefault().Value;
-            return true;
+            return result;
         }
 
         /// <summary>
@@ -199,13 +244,9 @@ namespace com.absence.variablesystem.banksystembase
         public bool TryGetFloat(string variableName, out float value)
         {
             variableName = TrimVariableNameType(variableName);
-            value = 0f;
+            bool result = TryFindVariable(variableName, m_floats, out value);
 
-            List<FloatVariable> check = m_floats.Where(v => v.Name == variableName).ToList();
-            if (check.Count == 0) return false;
-
-            value = check.FirstOrDefault().Value;
-            return true;
+            return result;
         }
 
         /// <summary>
@@ -217,13 +258,9 @@ namespace com.absence.variablesystem.banksystembase
         public bool TryGetString(string variableName, out string value)
         {
             variableName = TrimVariableNameType(variableName);
-            value = string.Empty;
+            bool result = TryFindVariable(variableName, m_strings, out value);
 
-            List<builtin.StringVariable> check = m_strings.Where(v => v.Name == variableName).ToList();
-            if (check.Count == 0) return false;
-
-            value = check.FirstOrDefault().Value;
-            return true;
+            return result;
         }
 
         /// <summary>
@@ -235,74 +272,70 @@ namespace com.absence.variablesystem.banksystembase
         public bool TryGetBoolean(string variableName, out bool value)
         {
             variableName = TrimVariableNameType(variableName);
-            value = false;
+            bool result = TryFindVariable(variableName, m_booleans, out value);
 
-            List<builtin.BooleanVariable> check = m_booleans.Where(v => v.Name == variableName).ToList();
-            if (check.Count == 0) return false;
-
-            value = check.FirstOrDefault().Value;
-            return true;
+            return result;
         }
 
-        /// <summary>
-        /// Use to add a value change callback to an integer variable with a specific name.
-        /// </summary>
-        /// <param name="variableName">Target name.</param>
-        /// <param name="callbackAction">What to do when value of the variable changes.</param>
-        public void AddValueChangeListenerToInt(string variableName, Action<VariableValueChangedCallbackContext<int>> callbackAction)
-        {
-            variableName = TrimVariableNameType(variableName);
+        ///// <summary>
+        ///// Use to add a value change callback to an integer variable with a specific name.
+        ///// </summary>
+        ///// <param name="variableName">Target name.</param>
+        ///// <param name="callbackAction">What to do when value of the variable changes.</param>
+        //public void AddValueChangeListenerToInt(string variableName, Action<VariableValueChangedCallbackContext<int>> callbackAction)
+        //{
+        //    variableName = TrimVariableNameType(variableName);
 
-            List<IntegerVariable> check = m_ints.Where(v => v.Name == variableName).ToList();
-            if (check.Count == 0) return;
+        //    List<IntegerVariable> check = m_ints.Where(v => v.Name == variableName).ToList();
+        //    if (check.Count == 0) return;
 
-            check.FirstOrDefault().AddValueChangeListener(callbackAction);
-        }
+        //    check.FirstOrDefault().AddValueChangeListener(callbackAction);
+        //}
 
-        /// <summary>
-        /// Use to add a value change callback to a floating point variable with a specific name.
-        /// </summary>
-        /// <param name="variableName">Target name.</param>
-        /// <param name="callbackAction">What to do when value of the variable changes.</param>
-        public void AddValueChangeListenerToFloat(string variableName, Action<VariableValueChangedCallbackContext<float>> callbackAction)
-        {
-            variableName = TrimVariableNameType(variableName);
+        ///// <summary>
+        ///// Use to add a value change callback to a floating point variable with a specific name.
+        ///// </summary>
+        ///// <param name="variableName">Target name.</param>
+        ///// <param name="callbackAction">What to do when value of the variable changes.</param>
+        //public void AddValueChangeListenerToFloat(string variableName, Action<VariableValueChangedCallbackContext<float>> callbackAction)
+        //{
+        //    variableName = TrimVariableNameType(variableName);
 
-            List<FloatVariable> check = m_floats.Where(v => v.Name == variableName).ToList();
-            if (check.Count == 0) return;
+        //    List<FloatVariable> check = m_floats.Where(v => v.Name == variableName).ToList();
+        //    if (check.Count == 0) return;
 
-            check.FirstOrDefault().AddValueChangeListener(callbackAction);
-        }
+        //    check.FirstOrDefault().AddValueChangeListener(callbackAction);
+        //}
 
-        /// <summary>
-        /// Use to add a value change callback to a string variable with a specific name.
-        /// </summary>
-        /// <param name="variableName">Target name.</param>
-        /// <param name="callbackAction">What to do when value of the variable changes.</param>
-        public void AddValueChangeListenerToString(string variableName, Action<VariableValueChangedCallbackContext<string>> callbackAction)
-        {
-            variableName = TrimVariableNameType(variableName);
+        ///// <summary>
+        ///// Use to add a value change callback to a string variable with a specific name.
+        ///// </summary>
+        ///// <param name="variableName">Target name.</param>
+        ///// <param name="callbackAction">What to do when value of the variable changes.</param>
+        //public void AddValueChangeListenerToString(string variableName, Action<VariableValueChangedCallbackContext<string>> callbackAction)
+        //{
+        //    variableName = TrimVariableNameType(variableName);
 
-            List<builtin.StringVariable> check = m_strings.Where(v => v.Name == variableName).ToList();
-            if (check.Count == 0) return;
+        //    List<builtin.StringVariable> check = m_strings.Where(v => v.Name == variableName).ToList();
+        //    if (check.Count == 0) return;
 
-            check.FirstOrDefault().AddValueChangeListener(callbackAction);
-        }
+        //    check.FirstOrDefault().AddValueChangeListener(callbackAction);
+        //}
 
-        /// <summary>
-        /// Use to add a value change callback to a boolean variable with a specific name.
-        /// </summary>
-        /// <param name="variableName">Target name.</param>
-        /// <param name="callbackAction">What to do when value of the variable changes.</param>
-        public void AddValueChangeListenerToBoolean(string variableName, Action<VariableValueChangedCallbackContext<bool>> callbackAction)
-        {
-            variableName = TrimVariableNameType(variableName);
+        ///// <summary>
+        ///// Use to add a value change callback to a boolean variable with a specific name.
+        ///// </summary>
+        ///// <param name="variableName">Target name.</param>
+        ///// <param name="callbackAction">What to do when value of the variable changes.</param>
+        //public void AddValueChangeListenerToBoolean(string variableName, Action<VariableValueChangedCallbackContext<bool>> callbackAction)
+        //{
+        //    variableName = TrimVariableNameType(variableName);
 
-            List<builtin.BooleanVariable> check = m_booleans.Where(v => v.Name == variableName).ToList();
-            if (check.Count == 0) return;
+        //    List<builtin.BooleanVariable> check = m_booleans.Where(v => v.Name == variableName).ToList();
+        //    if (check.Count == 0) return;
 
-            check.FirstOrDefault().AddValueChangeListener(callbackAction);
-        }
+        //    check.FirstOrDefault().AddValueChangeListener(callbackAction);
+        //}
 
         /// <summary>
         /// Use to change an integer variable's value.
@@ -313,12 +346,7 @@ namespace com.absence.variablesystem.banksystembase
         public bool SetInt(string variableName, int newValue)
         {
             variableName = TrimVariableNameType(variableName);
-
-            var found = m_ints.Where(v => v.Name == variableName).FirstOrDefault();
-            if(found == null) return false;
-
-            found.UnderlyingValue = newValue;
-            return true;
+            return SetVariableIfExists(variableName, newValue, m_ints);
         }
 
         /// <summary>
@@ -330,12 +358,7 @@ namespace com.absence.variablesystem.banksystembase
         public bool SetFloat(string variableName, float newValue)
         {
             variableName = TrimVariableNameType(variableName);
-
-            var found = m_floats.Where(v => v.Name == variableName).FirstOrDefault();
-            if (found == null) return false;
-
-            found.UnderlyingValue = newValue;
-            return true;
+            return SetVariableIfExists(variableName, newValue, m_floats);
         }
 
         /// <summary>
@@ -347,12 +370,7 @@ namespace com.absence.variablesystem.banksystembase
         public bool SetString(string variableName, string newValue)
         {
             variableName = TrimVariableNameType(variableName);
-
-            var found = m_strings.Where(v => v.Name == variableName).FirstOrDefault();
-            if (found == null) return false;
-
-            found.UnderlyingValue = new(newValue);
-            return true;
+            return SetVariableIfExists(variableName, newValue, m_strings);
         }
 
         /// <summary>
@@ -364,12 +382,7 @@ namespace com.absence.variablesystem.banksystembase
         public bool SetBoolean(string variableName, bool newValue)
         {
             variableName = TrimVariableNameType(variableName);
-
-            var found = m_booleans.Where(v => v.Name == variableName).FirstOrDefault();
-            if (found == null) return false;
-
-            found.UnderlyingValue = newValue;
-            return true;
+            return SetVariableIfExists(variableName, newValue, m_booleans);
         }
 
         /// <summary>
@@ -413,6 +426,31 @@ namespace com.absence.variablesystem.banksystembase
                     this.HasBoolean(variableName));
         }
 
+        bool TryFindVariable<T1, T2>(string nameToSearch, IEnumerable<VariableNamePair<T1, T2>> container, out T1 result) where T2 : Variable<T1>
+        {
+            result = default;
+
+            T2 target = FindVariableOrNull(nameToSearch, container);
+            if (target == null) return false;
+
+            result = target.Value;
+            return true;
+        }
+
+        T2 FindVariableOrNull<T1, T2>(string nameToSearch, IEnumerable<VariableNamePair<T1, T2>> container) where T2 : Variable<T1> 
+        {
+            return container.FirstOrDefault(variable => variable.Name.Equals(nameToSearch)).Variable;
+        }
+
+        bool SetVariableIfExists<T1, T2>(string nameToSearch, T1 newValue, IEnumerable<VariableNamePair<T1, T2>> container) where T2 : Variable<T1>
+        {
+            T2 target = FindVariableOrNull(nameToSearch, container);
+            if (target == null) return false;
+
+            target.UnderlyingValue = newValue;
+            return true;
+        }
+
         string TrimVariableNameType(string nameToTrim)
         {
             if (!nameToTrim.Contains(':')) return nameToTrim;
@@ -432,6 +470,11 @@ namespace com.absence.variablesystem.banksystembase
             clone.OnDestroyAction = null;
 
             return clone;
+        }
+
+        public OptimizedVariableBankHandle GetOptimizedHandle()
+        {
+            return new OptimizedVariableBankHandle(this);
         }
 
         private void OnDestroy()

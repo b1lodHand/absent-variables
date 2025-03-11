@@ -1,10 +1,11 @@
-using com.absence.variablesystem.mutations.internals;
+using com.absence.variablesystem.internals;
+using com.absence.variablesystem.mutations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace com.absence.variablesystem.internals
+namespace com.absence.variablesystem
 {
     /// <summary>
     /// The base class for any type of variable. You can override the effect of mutators by deriving this class. Or you can
@@ -12,13 +13,10 @@ namespace com.absence.variablesystem.internals
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [System.Serializable]
-    public abstract class Variable<T> : VariableBase
+    public class Variable<T> : VariableBase
     {
         [SerializeField] 
         protected event Action<VariableValueChangedCallbackContext<T>> m_onValueChanged;
-
-        [SerializeField] protected string m_name;
-        public string Name { get => m_name; protected set => m_name = value; }
 
         [SerializeField] protected T m_underlyingValue;
         [SerializeField] protected T m_value;
@@ -50,12 +48,13 @@ namespace com.absence.variablesystem.internals
 
         public Variable()
         {
-            this.m_name = string.Empty;
+            this.m_underlyingValue = default;
             this.m_bypassEvents = false;
+
+            Refresh();
         }
-        public Variable(string name, T value)
+        public Variable(T value)
         {
-            this.m_name = name;
             this.m_underlyingValue = value;
             this.m_bypassEvents = false;
 
@@ -186,6 +185,11 @@ namespace com.absence.variablesystem.internals
         public virtual bool ValueEquals(Variable<T> other)
         {
             return this.Value.Equals(other.Value);
+        }
+
+        public static explicit operator Variable<T>(T raw)
+        {
+            return new Variable<T>(raw);
         }
     }
 }

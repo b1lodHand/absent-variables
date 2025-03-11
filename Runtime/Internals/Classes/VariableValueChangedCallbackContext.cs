@@ -1,4 +1,4 @@
-namespace com.absence.variablesystem.internals
+namespace com.absence.variablesystem
 {
     /// <summary>
     /// Used for the event system of variables.
