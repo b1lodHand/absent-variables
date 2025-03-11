@@ -451,7 +451,9 @@ namespace com.absence.variablesystem.banksystembase
 
         T2 FindVariableOrNull<T1, T2>(string nameToSearch, IEnumerable<VariableNamePair<T1, T2>> container) where T2 : Variable<T1> 
         {
-            return container.FirstOrDefault(variable => variable.Name.Equals(nameToSearch)).Variable;
+            VariableNamePair<T1, T2> pair = container.FirstOrDefault(variable => variable.Name.Equals(nameToSearch));
+            if (pair == null) return null;
+            return pair.Variable;
         }
 
         bool SetVariableIfExists<T1, T2>(string nameToSearch, T1 newValue, IEnumerable<VariableNamePair<T1, T2>> container) where T2 : Variable<T1>
