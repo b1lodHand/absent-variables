@@ -377,9 +377,9 @@ namespace com.absence.variablesystem.banksystembase.editor
             if (targetBank.HasBoolean(targetVariableName) || targetBank.HasString(targetVariableName) || targetVariableName == VariableBank.Null)
             {
                 GUI.enabled = false;
-                //if (comparisonProp.enumValueIndex != (int)VariableComparer.ComparisonType.NotEquals) 
-                //    comparisonProp.enumValueIndex = (int)(VariableComparer.ComparisonType.EqualsTo);
-                comparisonProp.enumValueIndex = (int)(VariableComparerBase.ComparisonType.EqualsTo);
+                if (comparisonProp.enumValueIndex != (int)VariableComparerBase.ComparisonType.NotEquals)
+                    comparisonProp.enumValueIndex = (int)(VariableComparerBase.ComparisonType.EqualsTo);
+                //comparisonProp.enumValueIndex = (int)(VariableComparerBase.ComparisonType.EqualsTo);
             }
 
             comparisonProp.enumValueIndex = (int)((VariableComparerBase.ComparisonType)(EditorGUI.EnumPopup(setTypeSelectorRect, (VariableComparerBase.ComparisonType)comparisonProp.enumValueIndex)));
