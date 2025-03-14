@@ -27,7 +27,7 @@ namespace com.absence.variablesystem.banksystembase
         [SerializeField] protected string m_targetVariableName = VariableBank.Null;
 
 #if UNITY_EDITOR
-        [HideInInspector, SerializeField] private VariableNamePair m_targetVariableNamePair;
+        [HideInInspector, SerializeField] internal VariableNamePair m_targetVariableNamePair;
 #endif 
 
         [SerializeField] protected int m_intValue;
