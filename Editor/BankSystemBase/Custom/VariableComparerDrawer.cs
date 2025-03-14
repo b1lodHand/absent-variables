@@ -138,7 +138,7 @@ namespace com.absence.variablesystem.banksystembase.editor
                 RefreshCompSelector();
                 RefreshValueFields();
 
-                targetPairProp.boxedValue = targetBank.GetPairByName(evt.newValue);
+                targetPairProp.managedReferenceValue = targetBank.GetPairByName(evt.newValue);
                 serializedObject.ApplyModifiedProperties();
             });
 
@@ -177,14 +177,14 @@ namespace com.absence.variablesystem.banksystembase.editor
                 variableSelector.choices = variableNamesWithTypes;
 
                 var currentVarName = targetVarNameProp.stringValue;
-                if (targetPairProp.boxedValue != null)
+                if (targetPairProp.managedReferenceValue != null)
                 {
                     currentVarName = ((VariableNamePair)(targetPairProp.boxedValue)).Name;
                 }
                 else if (targetBank.HasAny(currentVarName))
                 {
                     variableSelector.SetValueWithoutNotify(currentVarName);
-                    targetPairProp.boxedValue = targetBank.GetPairByName(currentVarName);
+                    targetPairProp.managedReferenceValue = targetBank.GetPairByName(currentVarName);
                 }
                 else variableSelector.value = VariableBank.Null;
 
@@ -362,15 +362,15 @@ namespace com.absence.variablesystem.banksystembase.editor
 
             allNamesWithTypes.AddRange(targetBank.GetAllVariableNamesWithTypes());
 
-            if (targetPairProp.boxedValue != null)
+            if (targetPairProp.managedReferenceValue != null)
             {
-                targetVarNameProp.stringValue = ((VariableNamePair)(targetPairProp.boxedValue)).Name;
+                targetVarNameProp.stringValue = ((VariableNamePair)(targetPairProp.managedReferenceValue)).Name;
             }
 
             targetVarNameProp.stringValue = allNamesWithTypes[EditorGUI.Popup(variableSelectorRect,
                             allNamesWithTypes.Contains(targetVarNameProp.stringValue) ? allNamesWithTypes.IndexOf(targetVarNameProp.stringValue) : 0, allNamesWithTypes.ToArray())];
 
-            targetPairProp.boxedValue = targetBank.GetPairByName(targetVarNameProp.stringValue);
+            targetPairProp.managedReferenceValue = targetBank.GetPairByName(targetVarNameProp.stringValue);
 
             var targetVariableName = targetVarNameProp.stringValue;
 
