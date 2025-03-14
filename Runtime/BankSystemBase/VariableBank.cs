@@ -1,6 +1,5 @@
 using com.absence.variablesystem.builtin;
 using com.absence.variablesystem.imported;
-using com.absence.variablesystem.internals;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -195,6 +194,21 @@ namespace com.absence.variablesystem.banksystembase
             }
 
             return result;
+        }
+
+        public VariableNamePair GetPairByName(string name)
+        {
+            VariableNamePair intPair = Ints.FirstOrDefault(pair => pair.Name.Equals(name));
+            VariableNamePair floatPair = Floats.FirstOrDefault(pair => pair.Name.Equals(name));
+            VariableNamePair strPair = Strings.FirstOrDefault(pair => pair.Name.Equals(name));
+            VariableNamePair booleanPair = Booleans.FirstOrDefault(pair => pair.Name.Equals(name));
+
+            if (intPair != null) return intPair;
+            if (floatPair != null) return floatPair;
+            if (strPair != null) return strPair;
+            if (booleanPair != null) return booleanPair;
+
+            return null;
         }
 
         public int GetInt(string variableName)

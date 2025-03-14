@@ -7,7 +7,7 @@ namespace com.absence.variablesystem.banksystembase
     /// The base class for comparers.
     /// </summary>
     [System.Serializable]
-    public abstract class BaseVariableComparer
+    public abstract class VariableComparerBase
     {
         /// <summary>
         /// An enum for deciding how the comparison will get performed.
@@ -25,6 +25,10 @@ namespace com.absence.variablesystem.banksystembase
         [SerializeField] protected ComparisonType m_comparisonType = ComparisonType.EqualsTo;
         [SerializeField] protected string m_targetBankGuid;
         [SerializeField] protected string m_targetVariableName = VariableBank.Null;
+
+#if UNITY_EDITOR
+        [HideInInspector, SerializeField] private VariableNamePair m_targetVariableNamePair;
+#endif 
 
         [SerializeField] protected int m_intValue;
         [SerializeField] protected float m_floatValue;
@@ -113,7 +117,7 @@ namespace com.absence.variablesystem.banksystembase
         /// Override to define how this comparer will find it's runtime bank.
         /// </summary>
         /// <returns>The runtime bank or null</returns>
-        protected abstract VariableBank GetRuntimeBank();
+        protected abstract IPrimitiveVariableContainer GetRuntimeBank();
 
         /// <summary>
         /// Use to get the result of the comparer. <b>Runtime only.</b>
@@ -123,9 +127,14 @@ namespace com.absence.variablesystem.banksystembase
         {
             if (!Application.isPlaying) throw new Exception("You cannot call GetResult() on comparers outside play mode!");
 
-            VariableBank bank = GetRuntimeBank();
+            IPrimitiveVariableContainer bank = GetRuntimeBank();
 
-            var result = true;
+            return GetResult(bank);
+        }
+
+        public virtual bool GetResult(IPrimitiveVariableContainer bank)
+        {
+            bool result = true;
 
             if (bank == null) return result;
             if (m_targetVariableName == VariableBank.Null) return result;

@@ -8,9 +8,9 @@ using com.absence.variablesystem.imported;
 namespace com.absence.variablesystem.banksystembase.editor
 {
     /// <summary>
-    /// A custom property drawer script for <see cref="BaseVariableSetter"/>.
+    /// A custom property drawer script for <see cref="VariableSetterBase"/>.
     /// </summary>
-    [CustomPropertyDrawer(typeof(BaseVariableSetter), true)]
+    [CustomPropertyDrawer(typeof(VariableSetterBase), true)]
     public class VariableSetterDrawer : PropertyDrawer
     {
         /// <summary>
@@ -43,11 +43,12 @@ namespace com.absence.variablesystem.banksystembase.editor
         {
             // get serialized object.
             var serializedObject = property.serializedObject;
-            BaseVariableSetter setter = (BaseVariableSetter)property.boxedValue;
+            VariableSetterBase setter = (VariableSetterBase)property.boxedValue;
 
             var setTypeProp = property.FindPropertyRelative("m_setType");
             var bankGuidProp = property.FindPropertyRelative("m_targetBankGuid");
             var targetVarNameProp = property.FindPropertyRelative("m_targetVariableName");
+            var targetPairProp = property.FindPropertyRelative("m_targetVariableNamePair");
 
             var intValueProp = property.FindPropertyRelative("m_intValue");
             var floatValueProp = property.FindPropertyRelative("m_floatValue");
@@ -136,6 +137,7 @@ namespace com.absence.variablesystem.banksystembase.editor
                 RefreshSetTypeSelector();
                 RefreshValueFields();
 
+                targetPairProp.boxedValue = targetBank.GetPairByName(evt.newValue);
                 serializedObject.ApplyModifiedProperties();
             });
 
@@ -220,7 +222,7 @@ namespace com.absence.variablesystem.banksystembase.editor
                 if (currVarName != VariableBank.Null && !(targetBank.HasString(currVarName)) &&
                     !(targetBank.HasBoolean(currVarName))) return;
 
-                comparisonSelector.value = BaseVariableSetter.SetType.SetTo;
+                comparisonSelector.value = VariableSetterBase.SetType.SetTo;
                 comparisonSelector.SetEnabled(false);
             }
         }
@@ -258,7 +260,7 @@ namespace com.absence.variablesystem.banksystembase.editor
         void DrawIMGUI(Rect position, SerializedProperty property)
         {
             // get properties.
-            BaseVariableSetter setter = (BaseVariableSetter)property.boxedValue;
+            VariableSetterBase setter = (VariableSetterBase)property.boxedValue;
 
             var setTypeProp = property.FindPropertyRelative("m_setType");
             var bankGuidProp = property.FindPropertyRelative("m_targetBankGuid");
@@ -354,10 +356,10 @@ namespace com.absence.variablesystem.banksystembase.editor
             if (targetBank.HasBoolean(targetVariableName) || targetBank.HasString(targetVariableName) || targetVariableName == VariableBank.Null)
             {
                 GUI.enabled = false;
-                setTypeProp.enumValueIndex = (int)(BaseVariableSetter.SetType.SetTo);
+                setTypeProp.enumValueIndex = (int)(VariableSetterBase.SetType.SetTo);
             }
 
-            setTypeProp.enumValueIndex = (int)((BaseVariableSetter.SetType)(EditorGUI.EnumPopup(setTypeSelectorRect, (BaseVariableSetter.SetType)setTypeProp.enumValueIndex)));
+            setTypeProp.enumValueIndex = (int)((VariableSetterBase.SetType)(EditorGUI.EnumPopup(setTypeSelectorRect, (VariableSetterBase.SetType)setTypeProp.enumValueIndex)));
 
             GUI.enabled = true;
 

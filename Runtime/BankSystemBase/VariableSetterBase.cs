@@ -7,7 +7,7 @@ namespace com.absence.variablesystem.banksystembase
     /// The base class for setters.
     /// </summary>
     [System.Serializable]
-    public abstract class BaseVariableSetter
+    public abstract class VariableSetterBase
     {
         /// <summary>
         /// An enum for deciding which way the setting will work.
@@ -25,10 +25,17 @@ namespace com.absence.variablesystem.banksystembase
         [SerializeField] protected string m_targetBankGuid;
         [SerializeField] protected string m_targetVariableName = VariableBank.Null;
 
+#if UNITY_EDITOR
+        [HideInInspector, SerializeField] private VariableNamePair m_targetVariableNamePair;
+#endif 
+
         [SerializeField] protected int m_intValue;
         [SerializeField] protected float m_floatValue;
         [SerializeField] protected string m_stringValue;
         [SerializeField] protected bool m_boolValue;
+
+        public virtual bool DontThrowExceptions => false;
+        public virtual bool CanUseInEditMode => false;
 
         public string TargetVariableName
         {
@@ -112,28 +119,45 @@ namespace com.absence.variablesystem.banksystembase
         /// Override to define how this setter will find it's runtime bank.
         /// </summary>
         /// <returns>The runtime bank or null</returns>
-        protected abstract VariableBank GetRuntimeBank();
+        protected abstract IPrimitiveVariableContainer GetRuntimeBank();
 
         /// <summary>
         /// Sets the target variable in target <see cref="VariableBank"/> to intended value.
         /// </summary>
         public virtual void Perform()
         {
-            if (!Application.isPlaying) throw new Exception("You cannot call Perform() on setters outside play mode!");
+            if ((!CanUseInEditMode) && (!Application.isPlaying))
+            {
+                if (DontThrowExceptions) return;
+                else throw new Exception("You cannot call Perform() on setters outside play mode!");
+            }
 
-            VariableBank bank = GetRuntimeBank();
+            IPrimitiveVariableContainer bank = GetRuntimeBank();
+            Perform(bank);
+        }
 
-            if (bank == null) return;
-            if (m_targetVariableName == VariableBank.Null) return;
+        public virtual void Perform(IPrimitiveVariableContainer bank)
+        {
+            if (bank == null)
+            {
+                if (DontThrowExceptions) return;
+                else throw new Exception("Target bank of the variable setter is null.");
+            }
+
+            if (DontThrowExceptions && m_targetVariableName == VariableBank.Null)
+            {
+                if (DontThrowExceptions) return;
+                else throw new Exception("Target variable of the variable setter is null.");
+            }
 
             if (bank.HasInt(m_targetVariableName))
-                Perform_Int(bank);
+                PerformForInt(bank);
             else if (bank.HasFloat(m_targetVariableName))
-                Perform_Float(bank);
+                PerformForFloat(bank);
             else if (bank.HasString(m_targetVariableName))
-                Perform_String(bank);
+                PerformForString(bank);
             else if (bank.HasBoolean(m_targetVariableName))
-                Perform_Boolean(bank);
+                PerformForBoolean(bank);
         }
 
         #region Performs
@@ -141,27 +165,39 @@ namespace com.absence.variablesystem.banksystembase
         /// Override to define the logic for booleans.
         /// </summary>
         /// <param name="bank">Runtime bank.</param>
-        protected virtual void Perform_Boolean(VariableBank bank)
+        protected virtual void PerformForBoolean(IPrimitiveVariableContainer bank)
         {
-            bank.SetBoolean(m_targetVariableName, m_boolValue);
+            if (!bank.SetBoolean(m_targetVariableName, m_boolValue))
+            {
+                if (DontThrowExceptions) return;
+                else throw new Exception($"Target variable couldn't be found: '{m_targetVariableName}'");
+            }
         }
 
         /// <summary>
         /// Override to define the logic for strings.
         /// </summary>
         /// <param name="bank">Runtime bank.</param>
-        protected virtual void Perform_String(VariableBank bank)
+        protected virtual void PerformForString(IPrimitiveVariableContainer bank)
         {
-            bank.SetString(m_targetVariableName, m_stringValue);
+            if (!bank.SetString(m_targetVariableName, m_stringValue))
+            {
+                if (DontThrowExceptions) return;
+                else throw new Exception($"Target variable couldn't be found: '{m_targetVariableName}'");
+            }
         }
 
         /// <summary>
         /// Override to define the logic for floating points.
         /// </summary>
         /// <param name="bank">Runtime bank.</param>
-        protected virtual void Perform_Float(VariableBank bank)
+        protected virtual void PerformForFloat(IPrimitiveVariableContainer bank)
         {
-            if (!bank.TryGetFloat(m_targetVariableName, out float value)) return;
+            if (!bank.TryGetFloat(m_targetVariableName, out float value))
+            {
+                if (DontThrowExceptions) return;
+                else throw new Exception($"Target variable couldn't be found: '{m_targetVariableName}'");
+            }
 
             switch (m_setType)
             {
@@ -191,9 +227,13 @@ namespace com.absence.variablesystem.banksystembase
         /// Override to define the logic for integers.
         /// </summary>
         /// <param name="bank">Runtime bank.</param>
-        protected virtual void Perform_Int(VariableBank bank)
+        protected virtual void PerformForInt(IPrimitiveVariableContainer bank)
         {
-            if (!bank.TryGetInt(m_targetVariableName, out int value)) return;
+            if (!bank.TryGetInt(m_targetVariableName, out int value))
+            {
+                if (DontThrowExceptions) return;
+                else throw new Exception($"Target variable couldn't be found: '{m_targetVariableName}'");
+            }
 
             switch (m_setType)
             {

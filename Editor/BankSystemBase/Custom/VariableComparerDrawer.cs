@@ -8,9 +8,9 @@ using com.absence.variablesystem.imported;
 namespace com.absence.variablesystem.banksystembase.editor
 {
     /// <summary>
-    /// A custom property drawer for <see cref="BaseVariableComparer"/>.
+    /// A custom property drawer for <see cref="VariableComparerBase"/>.
     /// </summary>
-    [CustomPropertyDrawer(typeof(BaseVariableComparer), true)]
+    [CustomPropertyDrawer(typeof(VariableComparerBase), true)]
     public class VariableComparerDrawer : PropertyDrawer
     {
         /// <summary>
@@ -44,11 +44,12 @@ namespace com.absence.variablesystem.banksystembase.editor
         {
             // get serialized object.
             var serializedObject = property.serializedObject;
-            BaseVariableComparer comparer = (BaseVariableComparer)property.boxedValue;
+            VariableComparerBase comparer = (VariableComparerBase)property.boxedValue;
 
             var comparisonProp = property.FindPropertyRelative("m_comparisonType");
             var bankGuidProp = property.FindPropertyRelative("m_targetBankGuid");
             var targetVarNameProp = property.FindPropertyRelative("m_targetVariableName");
+            var targetPairProp = property.FindPropertyRelative("m_targetVariableNamePair");
 
             var intValueProp = property.FindPropertyRelative("m_intValue");
             var floatValueProp = property.FindPropertyRelative("m_floatValue");
@@ -137,6 +138,7 @@ namespace com.absence.variablesystem.banksystembase.editor
                 RefreshCompSelector();
                 RefreshValueFields();
 
+                targetPairProp.boxedValue = targetBank.GetPairByName(evt.newValue);
                 serializedObject.ApplyModifiedProperties();
             });
 
@@ -212,7 +214,7 @@ namespace com.absence.variablesystem.banksystembase.editor
 
             void RefreshCompSelector()
             {
-                var lastCompValue = (BaseVariableComparer.ComparisonType)comparisonProp.enumValueIndex;
+                var lastCompValue = (VariableComparerBase.ComparisonType)comparisonProp.enumValueIndex;
                 var comparisonSelector = container.Q<EnumField>("comparison");
 
                 comparisonSelector.SetEnabled(true);
@@ -222,8 +224,8 @@ namespace com.absence.variablesystem.banksystembase.editor
                 if (currVarName != VariableBank.Null && !(targetBank.HasString(currVarName)) &&
                     !(targetBank.HasBoolean(currVarName))) return;
 
-                if (lastCompValue == BaseVariableComparer.ComparisonType.NotEquals) comparisonSelector.value = BaseVariableComparer.ComparisonType.NotEquals;
-                else comparisonSelector.value = BaseVariableComparer.ComparisonType.EqualsTo;
+                if (lastCompValue == VariableComparerBase.ComparisonType.NotEquals) comparisonSelector.value = VariableComparerBase.ComparisonType.NotEquals;
+                else comparisonSelector.value = VariableComparerBase.ComparisonType.EqualsTo;
                 comparisonSelector.SetEnabled(false);
             }
         }
@@ -261,7 +263,7 @@ namespace com.absence.variablesystem.banksystembase.editor
         void DrawIMGUI(Rect position, SerializedProperty property)
         {
             // get properties.
-            BaseVariableComparer comparer = (BaseVariableComparer)property.boxedValue;
+            VariableComparerBase comparer = (VariableComparerBase)property.boxedValue;
 
             var comparisonProp = property.FindPropertyRelative("m_comparisonType");
             var bankGuidProp = property.FindPropertyRelative("m_targetBankGuid");
@@ -359,10 +361,10 @@ namespace com.absence.variablesystem.banksystembase.editor
                 GUI.enabled = false;
                 //if (comparisonProp.enumValueIndex != (int)VariableComparer.ComparisonType.NotEquals) 
                 //    comparisonProp.enumValueIndex = (int)(VariableComparer.ComparisonType.EqualsTo);
-                comparisonProp.enumValueIndex = (int)(BaseVariableComparer.ComparisonType.EqualsTo);
+                comparisonProp.enumValueIndex = (int)(VariableComparerBase.ComparisonType.EqualsTo);
             }
 
-            comparisonProp.enumValueIndex = (int)((BaseVariableComparer.ComparisonType)(EditorGUI.EnumPopup(setTypeSelectorRect, (BaseVariableComparer.ComparisonType)comparisonProp.enumValueIndex)));
+            comparisonProp.enumValueIndex = (int)((VariableComparerBase.ComparisonType)(EditorGUI.EnumPopup(setTypeSelectorRect, (VariableComparerBase.ComparisonType)comparisonProp.enumValueIndex)));
 
             GUI.enabled = true;
 
