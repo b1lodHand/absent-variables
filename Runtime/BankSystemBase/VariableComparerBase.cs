@@ -35,6 +35,10 @@ namespace com.absence.variablesystem.banksystembase
         [SerializeField] protected string m_stringValue;
         [SerializeField] protected bool m_boolValue;
 
+        public virtual bool DontThrowExceptions => false;
+        public virtual bool CanUseInEditMode => false;
+        public virtual bool ReturnTrueOnException => true;
+
         public string TargetVariableName
         {
             get
@@ -125,7 +129,11 @@ namespace com.absence.variablesystem.banksystembase
         /// <returns>Result of the comparer. Returns true directly if anything goes wrong.</returns>
         public virtual bool GetResult()
         {
-            if (!Application.isPlaying) throw new Exception("You cannot call GetResult() on comparers outside play mode!");
+            if ((!CanUseInEditMode) && (!Application.isPlaying))
+            {
+                if (DontThrowExceptions) return ReturnTrueOnException;
+                else throw new Exception("You cannot call GetResult() on comparers outside play mode!");
+            }
 
             IPrimitiveVariableContainer bank = GetRuntimeBank();
 
@@ -136,8 +144,17 @@ namespace com.absence.variablesystem.banksystembase
         {
             bool result = true;
 
-            if (bank == null) return result;
-            if (m_targetVariableName == VariableBank.Null) return result;
+            if (bank == null)
+            {
+                if (DontThrowExceptions) return ReturnTrueOnException;
+                else throw new Exception("Target bank of the variable comparer is null.");
+            }
+
+            if (DontThrowExceptions && m_targetVariableName == VariableBank.Null)
+            {
+                if (DontThrowExceptions) return ReturnTrueOnException;
+                else throw new Exception("Target variable of the variable comparer is null.");
+            }
 
             if (bank.TryGetString(m_targetVariableName, out string stringValue)) result = (stringValue == m_stringValue);
             else if (bank.TryGetBoolean(m_targetVariableName, out bool boolValue)) result = (boolValue == m_boolValue);
