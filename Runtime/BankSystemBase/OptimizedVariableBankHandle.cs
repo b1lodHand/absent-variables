@@ -54,66 +54,92 @@ namespace com.absence.variablesystem.banksystembase
 
         public bool GetBoolean(string variableName)
         {
+            variableName = VariableBank.TrimVariableNameType(variableName);
+
             return m_booleans[variableName].Value;
         }
 
         public float GetFloat(string variableName)
         {
+            variableName = VariableBank.TrimVariableNameType(variableName);
+
             return m_floats[variableName].Value;
         }
 
         public int GetInt(string variableName)
         {
+            variableName = VariableBank.TrimVariableNameType(variableName);
+
             return m_ints[variableName].Value;
         }
 
         public string GetString(string variableName)
         {
+            variableName = VariableBank.TrimVariableNameType(variableName);
+
             return m_strings[variableName].Value;
         }
 
         public BooleanVariable GetBooleanVariable(string variableName)
         {
+            variableName = VariableBank.TrimVariableNameType(variableName);
+
             return m_booleans[variableName];
         }
 
         public FloatVariable GetFloatVariable(string variableName)
         {
+            variableName = VariableBank.TrimVariableNameType(variableName);
+
             return m_floats[variableName];
         }
 
         public IntegerVariable GetIntVariable(string variableName)
         {
+            variableName = VariableBank.TrimVariableNameType(variableName);
+
             return m_ints[variableName];
         }
 
         public StringVariable GetStringVariable(string variableName)
         {
+            variableName = VariableBank.TrimVariableNameType(variableName);
+
             return m_strings[variableName];
         }
 
         public bool HasBoolean(string variableName)
         {
+            variableName = VariableBank.TrimVariableNameType(variableName);
+
             return m_booleans.ContainsKey(variableName);
         }
 
         public bool HasFloat(string variableName)
         {
+            variableName = VariableBank.TrimVariableNameType(variableName);
+
             return m_floats.ContainsKey(variableName);
         }
 
         public bool HasInt(string variableName)
         {
+            variableName = VariableBank.TrimVariableNameType(variableName);
+
             return m_ints.ContainsKey(variableName);
         }
 
         public bool HasString(string variableName)
         {
+            variableName = VariableBank.TrimVariableNameType(variableName);
+
             return m_strings.ContainsKey(variableName);
         }
 
         public bool SetBoolean(string variableName, bool newValue)
         {
+            variableName = VariableBank.TrimVariableNameType(variableName);
+
             if (!HasBoolean(variableName)) return false;
 
             m_booleans[variableName].UnderlyingValue = newValue;
@@ -122,6 +148,8 @@ namespace com.absence.variablesystem.banksystembase
 
         public bool SetFloat(string variableName, float newValue)
         {
+            variableName = VariableBank.TrimVariableNameType(variableName);
+
             if (!HasFloat(variableName)) return false;
 
             m_floats[variableName].UnderlyingValue = newValue;
@@ -130,6 +158,8 @@ namespace com.absence.variablesystem.banksystembase
 
         public bool SetInt(string variableName, int newValue)
         {
+            variableName = VariableBank.TrimVariableNameType(variableName);
+
             if (!HasInt(variableName)) return false;
 
             m_ints[variableName].UnderlyingValue = newValue;
@@ -138,6 +168,8 @@ namespace com.absence.variablesystem.banksystembase
 
         public bool SetString(string variableName, string newValue)
         {
+            variableName = VariableBank.TrimVariableNameType(variableName);
+
             if (!HasString(variableName)) return false;
 
             m_strings[variableName].UnderlyingValue = newValue;
@@ -146,6 +178,8 @@ namespace com.absence.variablesystem.banksystembase
 
         public bool TryGetBoolean(string variableName, out bool value)
         {
+            variableName = VariableBank.TrimVariableNameType(variableName);
+
             value = default;
             bool result = m_booleans.TryGetValue(variableName, out BooleanVariable boolean);
             if (result) value = boolean.Value;
@@ -155,6 +189,8 @@ namespace com.absence.variablesystem.banksystembase
 
         public bool TryGetFloat(string variableName, out float value)
         {
+            variableName = VariableBank.TrimVariableNameType(variableName);
+
             value = default;
             bool result = m_floats.TryGetValue(variableName, out FloatVariable floatingPoint);
             if (result) value = floatingPoint.Value;
@@ -164,6 +200,8 @@ namespace com.absence.variablesystem.banksystembase
 
         public bool TryGetInt(string variableName, out int value)
         {
+            variableName = VariableBank.TrimVariableNameType(variableName);
+
             value = default;
             bool result = m_ints.TryGetValue(variableName, out IntegerVariable integer);
             if (result) value = integer.Value;
@@ -173,6 +211,8 @@ namespace com.absence.variablesystem.banksystembase
 
         public bool TryGetString(string variableName, out string value)
         {
+            variableName = VariableBank.TrimVariableNameType(variableName);
+
             value = default;
             bool result = m_strings.TryGetValue(variableName, out StringVariable str);
             if (result) value = str.Value;
@@ -182,21 +222,29 @@ namespace com.absence.variablesystem.banksystembase
 
         public void AddValueChangeListenerToInt(string variableName, Action<VariableValueChangedCallbackContext<int>> callbackAction)
         {
+            variableName = VariableBank.TrimVariableNameType(variableName);
+
             m_ints[variableName].AddValueChangeListener(callbackAction);
         }
 
         public void AddValueChangeListenerToFloat(string variableName, Action<VariableValueChangedCallbackContext<float>> callbackAction)
         {
+            variableName = VariableBank.TrimVariableNameType(variableName);
+
             m_floats[variableName].AddValueChangeListener(callbackAction);
         }
 
         public void AddValueChangeListenerToString(string variableName, Action<VariableValueChangedCallbackContext<string>> callbackAction)
         {
+            variableName = VariableBank.TrimVariableNameType(variableName);
+
             m_strings[variableName].AddValueChangeListener(callbackAction);
         }
 
         public void AddValueChangeListenerToBoolean(string variableName, Action<VariableValueChangedCallbackContext<bool>> callbackAction)
         {
+            variableName = VariableBank.TrimVariableNameType(variableName);
+
             m_booleans[variableName].AddValueChangeListener(callbackAction);
         }
     }
