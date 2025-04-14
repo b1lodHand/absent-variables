@@ -144,7 +144,7 @@ namespace com.absence.variablesystem.banksystembase
                 else throw new Exception("Target bank of the variable setter is null.");
             }
 
-            if (DontThrowExceptions && m_targetVariableName == VariableBank.Null)
+            if (m_targetVariableName == VariableBank.Null)
             {
                 if (DontThrowExceptions) return;
                 else throw new Exception("Target variable of the variable setter is null.");

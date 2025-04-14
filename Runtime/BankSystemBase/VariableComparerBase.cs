@@ -150,7 +150,7 @@ namespace com.absence.variablesystem.banksystembase
                 else throw new Exception("Target bank of the variable comparer is null.");
             }
 
-            if (DontThrowExceptions && m_targetVariableName == VariableBank.Null)
+            if (m_targetVariableName == VariableBank.Null)
             {
                 if (DontThrowExceptions) return ReturnTrueOnException;
                 else throw new Exception("Target variable of the variable comparer is null.");
