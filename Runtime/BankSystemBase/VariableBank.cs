@@ -17,6 +17,12 @@ namespace com.absence.variablesystem.banksystembase
         /// </summary>
         public const string Null = "null: null";
 
+        internal static string TrimVariableNameType(string nameToTrim)
+        {
+            if (!nameToTrim.Contains(':')) return nameToTrim;
+            return nameToTrim.Split(':')[1].Trim();
+        }
+
         [SerializeField, Readonly, Tooltip("Guid of this bank.")] 
         private string m_guid = System.Guid.NewGuid().ToString();
 
@@ -477,12 +483,6 @@ namespace com.absence.variablesystem.banksystembase
 
             target.UnderlyingValue = newValue;
             return true;
-        }
-
-        string TrimVariableNameType(string nameToTrim)
-        {
-            if (!nameToTrim.Contains(':')) return nameToTrim;
-            return nameToTrim.Split(':')[1].Trim();
         }
 
         /// <summary>

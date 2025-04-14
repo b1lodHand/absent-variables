@@ -33,22 +33,22 @@ namespace com.absence.variablesystem.banksystembase
 
             foreach (var integer in target.Ints)
             {
-                m_ints.Add(integer.Name, integer.Variable);
+                m_ints.Add(VariableBank.TrimVariableNameType(integer.Name), integer.Variable);
             }
 
             foreach (var floatingPoint in target.Floats)
             {
-                m_floats.Add(floatingPoint.Name, floatingPoint.Variable);
+                m_floats.Add(VariableBank.TrimVariableNameType(floatingPoint.Name), floatingPoint.Variable);
             }
 
             foreach (var str in target.Strings)
             {
-                m_strings.Add(str.Name, str.Variable);
+                m_strings.Add(VariableBank.TrimVariableNameType(str.Name), str.Variable);
             }
 
             foreach (var boolean in target.Booleans)
             {
-                m_booleans.Add(boolean.Name, boolean.Variable);
+                m_booleans.Add(VariableBank.TrimVariableNameType(boolean.Name), boolean.Variable);
             }
         }
 
