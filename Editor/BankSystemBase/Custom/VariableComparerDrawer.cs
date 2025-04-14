@@ -179,7 +179,7 @@ namespace com.absence.variablesystem.banksystembase.editor
                 var currentVarName = targetVarNameProp.stringValue;
                 if (targetPairProp.managedReferenceValue != null)
                 {
-                    currentVarName = ((VariableNamePair)(targetPairProp.boxedValue)).Name;
+                    currentVarName = ((VariableNamePair)(targetPairProp.managedReferenceValue)).Name;
                 }
                 else if (targetBank.HasAny(currentVarName))
                 {
