@@ -24,7 +24,11 @@ namespace com.absence.variablesystem.banksystembase
 
         [SerializeField] protected ComparisonType m_comparisonType = ComparisonType.EqualsTo;
         [SerializeField] protected string m_targetBankGuid;
-        [SerializeField] protected string m_targetVariableGuid = VariableBank.Null;
+        [SerializeField] protected string m_targetVariableName = VariableBank.Null;
+
+#if UNITY_EDITOR
+        [HideInInspector, SerializeReference] internal VariableNamePair m_targetVariableNamePair;
+#endif 
 
         [SerializeField] protected int m_intValue;
         [SerializeField] protected float m_floatValue;
@@ -35,16 +39,16 @@ namespace com.absence.variablesystem.banksystembase
         public virtual bool CanUseInEditMode => false;
         public virtual bool ReturnTrueOnException => true;
 
-        public string TargetVariableGuid
+        public string TargetVariableName
         {
             get
             {
-                return m_targetVariableGuid;
+                return m_targetVariableName;
             }
 
             set
             {
-                m_targetVariableGuid = value;
+                m_targetVariableName = value;
             }
         }
         public ComparisonType TypeOfComparison
@@ -146,16 +150,16 @@ namespace com.absence.variablesystem.banksystembase
                 else throw new Exception("Target bank of the variable comparer is null.");
             }
 
-            if (TargetVariableGuid == VariableBank.Null)
+            if (m_targetVariableName == VariableBank.Null)
             {
                 if (DontThrowExceptions) return ReturnTrueOnException;
                 else throw new Exception("Target variable of the variable comparer is null.");
             }
 
-            if (bank.TryGetString(TargetVariableGuid, out string stringValue)) result = (stringValue == m_stringValue);
-            else if (bank.TryGetBoolean(TargetVariableGuid, out bool boolValue)) result = (boolValue == m_boolValue);
-            else if (bank.TryGetInt(TargetVariableGuid, out int intValue)) result = CompareNumerics(intValue, m_intValue);
-            else if (bank.TryGetFloat(TargetVariableGuid, out float floatValue)) result = CompareNumerics(floatValue, m_floatValue);
+            if (bank.TryGetString(m_targetVariableName, out string stringValue)) result = (stringValue == m_stringValue);
+            else if (bank.TryGetBoolean(m_targetVariableName, out bool boolValue)) result = (boolValue == m_boolValue);
+            else if (bank.TryGetInt(m_targetVariableName, out int intValue)) result = CompareNumerics(intValue, m_intValue);
+            else if (bank.TryGetFloat(m_targetVariableName, out float floatValue)) result = CompareNumerics(floatValue, m_floatValue);
 
             return result;
         }

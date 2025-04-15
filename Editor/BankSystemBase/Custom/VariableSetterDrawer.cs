@@ -48,6 +48,7 @@ namespace com.absence.variablesystem.banksystembase.editor
             var setTypeProp = property.FindPropertyRelative("m_setType");
             var bankGuidProp = property.FindPropertyRelative("m_targetBankGuid");
             var targetVarNameProp = property.FindPropertyRelative("m_targetVariableName");
+            var targetPairProp = property.FindPropertyRelative("m_targetVariableNamePair");
 
             var intValueProp = property.FindPropertyRelative("m_intValue");
             var floatValueProp = property.FindPropertyRelative("m_floatValue");
@@ -136,6 +137,7 @@ namespace com.absence.variablesystem.banksystembase.editor
                 RefreshSetTypeSelector();
                 RefreshValueFields();
 
+                targetPairProp.managedReferenceValue = targetBank.GetPairByName(evt.newValue);
                 serializedObject.ApplyModifiedProperties();
             });
 
@@ -174,9 +176,14 @@ namespace com.absence.variablesystem.banksystembase.editor
                 variableSelector.choices = variableNamesWithTypes;
 
                 var currentVarName = targetVarNameProp.stringValue;
-                if (targetBank.HasAny(currentVarName))
+                if (targetPairProp.managedReferenceValue != null)
+                {
+                    currentVarName = ((VariableNamePair)(targetPairProp.managedReferenceValue)).Name;
+                }
+                else if (targetBank.HasAny(currentVarName))
                 {
                     variableSelector.SetValueWithoutNotify(currentVarName);
+                    targetPairProp.managedReferenceValue = targetBank.GetPairByName(currentVarName);
                 }
                 else variableSelector.value = VariableBank.Null;
 
@@ -268,6 +275,7 @@ namespace com.absence.variablesystem.banksystembase.editor
             var setTypeProp = property.FindPropertyRelative("m_setType");
             var bankGuidProp = property.FindPropertyRelative("m_targetBankGuid");
             var targetVarNameProp = property.FindPropertyRelative("m_targetVariableName");
+            var targetPairProp = property.FindPropertyRelative("m_targetVariableNamePair");
 
             var intValueProp = property.FindPropertyRelative("m_intValue");
             var floatValueProp = property.FindPropertyRelative("m_floatValue");
@@ -351,8 +359,15 @@ namespace com.absence.variablesystem.banksystembase.editor
 
             allNamesWithTypes.AddRange(targetBank.GetAllVariableNamesWithTypes());
 
+            if (targetPairProp.managedReferenceValue != null)
+            {
+                targetVarNameProp.stringValue = ((VariableNamePair)(targetPairProp.managedReferenceValue)).Name;
+            }
+
             targetVarNameProp.stringValue = allNamesWithTypes[EditorGUI.Popup(variableSelectorRect,
                             allNamesWithTypes.Contains(targetVarNameProp.stringValue) ? allNamesWithTypes.IndexOf(targetVarNameProp.stringValue) : 0, allNamesWithTypes.ToArray())];
+
+            targetPairProp.managedReferenceValue = targetBank.GetPairByName(targetVarNameProp.stringValue);
 
             var targetVariableName = targetVarNameProp.stringValue;
 

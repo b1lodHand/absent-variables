@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace com.absence.variablesystem.banksystembase.editor
 {
-    [CustomPropertyDrawer(typeof(VariableEntry), true)]
-    public class VariableEntryPropertyDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(VariableNamePair), true)]
+    public class VariableNamePairPropertyDrawer : PropertyDrawer
     {
         static readonly float s_verticalPaddingBottom = 1f;
         static readonly float s_horizontalArrayOffset = 15f;
@@ -20,11 +20,6 @@ namespace com.absence.variablesystem.banksystembase.editor
             SerializedProperty nameProp = property.FindPropertyRelative("Name");
             SerializedProperty variableProp = property.FindPropertyRelative("Variable");
             SerializedProperty valueProp = variableProp.FindPropertyRelative("m_value");
-            SerializedProperty errorProp = property.FindPropertyRelative("Error");
-            SerializedProperty warningProp = property.FindPropertyRelative("Warning");
-
-            bool error = errorProp.boolValue;
-            bool warning = warningProp.boolValue;
 
             float horizontalSpacing = 15f;
             float sizeX = (position.width - horizontalSpacing) / 2;
@@ -33,7 +28,6 @@ namespace com.absence.variablesystem.banksystembase.editor
             Rect dynamicPosition = new Rect(position.x, position.y, sizeX, EditorGUIUtility.singleLineHeight);
 
             EditorGUI.BeginProperty(position, label, property);
-
 
             EditorGUI.LabelField(dynamicPosition, $"Name ({label.text})");
             dynamicPosition.x += sizeX;
@@ -44,16 +38,9 @@ namespace com.absence.variablesystem.banksystembase.editor
             dynamicPosition.x -= sizeX;
             dynamicPosition.x -= horizontalSpacing;
 
-            Color prevColor = GUI.color;
-
-            if (error) GUI.color = Color.red;
-            else if (warning) GUI.color = Color.yellow;
-
             nameProp.stringValue = EditorGUI.TextField(dynamicPosition, nameProp.stringValue);
             dynamicPosition.x += sizeX;
             dynamicPosition.x += (horizontalSpacing - 1) / 2;
-
-            GUI.color = prevColor;
 
             dynamicPosition.width = 1;
             dynamicPosition.height -= 2;
