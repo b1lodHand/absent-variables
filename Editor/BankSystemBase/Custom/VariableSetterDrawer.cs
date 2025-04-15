@@ -178,7 +178,7 @@ namespace com.absence.variablesystem.banksystembase.editor
                 var currentVarName = targetVarNameProp.stringValue;
                 if (targetPairProp.managedReferenceValue != null)
                 {
-                    currentVarName = ((VariableNamePair)(targetPairProp.managedReferenceValue)).Name;
+                    currentVarName = ((VariableEntry)(targetPairProp.managedReferenceValue)).Name;
                 }
                 else if (targetBank.HasAny(currentVarName))
                 {
@@ -361,7 +361,7 @@ namespace com.absence.variablesystem.banksystembase.editor
 
             if (targetPairProp.managedReferenceValue != null)
             {
-                targetVarNameProp.stringValue = ((VariableNamePair)(targetPairProp.managedReferenceValue)).Name;
+                targetVarNameProp.stringValue = ((VariableEntry)(targetPairProp.managedReferenceValue)).Name;
             }
 
             targetVarNameProp.stringValue = allNamesWithTypes[EditorGUI.Popup(variableSelectorRect,

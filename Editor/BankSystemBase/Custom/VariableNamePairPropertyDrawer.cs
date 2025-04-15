@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace com.absence.variablesystem.banksystembase.editor
 {
-    [CustomPropertyDrawer(typeof(VariableNamePair), true)]
+    [CustomPropertyDrawer(typeof(VariableEntry), true)]
     public class VariableNamePairPropertyDrawer : PropertyDrawer
     {
         static readonly float s_verticalPaddingBottom = 1f;

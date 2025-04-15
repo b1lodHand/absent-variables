@@ -53,15 +53,15 @@ namespace com.absence.variablesystem.banksystembase
             }
         }
 
-        [SerializeField] protected List<VariableNamePair<int, IntegerVariable>> m_ints = new();
-        [SerializeField] protected List<VariableNamePair<float, FloatVariable>> m_floats = new();
-        [SerializeField] protected List<VariableNamePair<string, StringVariable>> m_strings = new();
-        [SerializeField] protected List<VariableNamePair<bool, BooleanVariable>> m_booleans = new();
+        [SerializeField] protected List<VariableEntry<int, IntegerVariable>> m_ints = new();
+        [SerializeField] protected List<VariableEntry<float, FloatVariable>> m_floats = new();
+        [SerializeField] protected List<VariableEntry<string, StringVariable>> m_strings = new();
+        [SerializeField] protected List<VariableEntry<bool, BooleanVariable>> m_booleans = new();
 
         /// <summary>
         /// All of the integer variables within this bank.
         /// </summary>
-        public List<VariableNamePair<int, IntegerVariable>> Ints 
+        public List<VariableEntry<int, IntegerVariable>> Ints 
         { 
             get 
             { 
@@ -77,7 +77,7 @@ namespace com.absence.variablesystem.banksystembase
         /// <summary>
         /// All of the floating point variables within this bank.
         /// </summary>
-        public List<VariableNamePair<float, FloatVariable>> Floats
+        public List<VariableEntry<float, FloatVariable>> Floats
         {
             get
             {
@@ -93,7 +93,7 @@ namespace com.absence.variablesystem.banksystembase
         /// <summary>
         /// All of the string variables within this bank.
         /// </summary>
-        public List<VariableNamePair<string, StringVariable>> Strings
+        public List<VariableEntry<string, StringVariable>> Strings
         {
             get
             {
@@ -109,7 +109,7 @@ namespace com.absence.variablesystem.banksystembase
         /// <summary>
         /// All of the boolean variables within this bank.
         /// </summary>
-        public List<VariableNamePair<bool, BooleanVariable>> Booleans
+        public List<VariableEntry<bool, BooleanVariable>> Booleans
         {
             get
             {
@@ -202,12 +202,12 @@ namespace com.absence.variablesystem.banksystembase
             return result;
         }
 
-        public VariableNamePair GetPairByName(string name)
+        public VariableEntry GetPairByName(string name)
         {
-            VariableNamePair intPair = Ints.FirstOrDefault(pair => pair.Name.Equals(name));
-            VariableNamePair floatPair = Floats.FirstOrDefault(pair => pair.Name.Equals(name));
-            VariableNamePair strPair = Strings.FirstOrDefault(pair => pair.Name.Equals(name));
-            VariableNamePair booleanPair = Booleans.FirstOrDefault(pair => pair.Name.Equals(name));
+            VariableEntry intPair = Ints.FirstOrDefault(pair => pair.Name.Equals(name));
+            VariableEntry floatPair = Floats.FirstOrDefault(pair => pair.Name.Equals(name));
+            VariableEntry strPair = Strings.FirstOrDefault(pair => pair.Name.Equals(name));
+            VariableEntry booleanPair = Booleans.FirstOrDefault(pair => pair.Name.Equals(name));
 
             if (intPair != null) return intPair;
             if (floatPair != null) return floatPair;
@@ -458,7 +458,7 @@ namespace com.absence.variablesystem.banksystembase
                     this.HasBoolean(variableName));
         }
 
-        bool TryFindVariable<T1, T2>(string nameToSearch, IEnumerable<VariableNamePair<T1, T2>> container, out T1 result) where T2 : Variable<T1>
+        bool TryFindVariable<T1, T2>(string nameToSearch, IEnumerable<VariableEntry<T1, T2>> container, out T1 result) where T2 : Variable<T1>
         {
             result = default;
 
@@ -469,14 +469,14 @@ namespace com.absence.variablesystem.banksystembase
             return true;
         }
 
-        T2 FindVariableOrNull<T1, T2>(string nameToSearch, IEnumerable<VariableNamePair<T1, T2>> container) where T2 : Variable<T1> 
+        T2 FindVariableOrNull<T1, T2>(string nameToSearch, IEnumerable<VariableEntry<T1, T2>> container) where T2 : Variable<T1> 
         {
-            VariableNamePair<T1, T2> pair = container.FirstOrDefault(variable => variable.Name.Equals(nameToSearch));
+            VariableEntry<T1, T2> pair = container.FirstOrDefault(variable => variable.Name.Equals(nameToSearch));
             if (pair == null) return null;
             return pair.Variable;
         }
 
-        bool SetVariableIfExists<T1, T2>(string nameToSearch, T1 newValue, IEnumerable<VariableNamePair<T1, T2>> container) where T2 : Variable<T1>
+        bool SetVariableIfExists<T1, T2>(string nameToSearch, T1 newValue, IEnumerable<VariableEntry<T1, T2>> container) where T2 : Variable<T1>
         {
             T2 target = FindVariableOrNull(nameToSearch, container);
             if (target == null) return false;
