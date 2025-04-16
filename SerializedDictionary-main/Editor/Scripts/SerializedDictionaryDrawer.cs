@@ -1,4 +1,4 @@
-﻿using AYellowpaper.SerializedCollections.Editor.Data;
+using AYellowpaper.SerializedCollections.Editor.Data;
 using AYellowpaper.SerializedCollections.Editor.States;
 using AYellowpaper.SerializedCollections.KeysGenerators;
 using System;
@@ -14,7 +14,7 @@ using UnityEngine;
 namespace AYellowpaper.SerializedCollections.Editor
 {
     [CustomPropertyDrawer(typeof(SerializedDictionary<,>))]
-    public class SerializedDictionaryDrawer : PropertyDrawer
+    internal class SerializedDictionaryDrawer : PropertyDrawer
     {
         public const string KeyName = nameof(SerializedKeyValuePair<int, int>.Key);
         public const string ValueName = nameof(SerializedKeyValuePair<int, int>.Value);

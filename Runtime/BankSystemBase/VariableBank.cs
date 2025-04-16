@@ -56,16 +56,16 @@ namespace com.absence.variablesystem.banksystembase
         }
 
         [SerializeField] 
-        protected SerializedDictionary<string, IntegerVariable> m_ints = new();
+        internal SerializedDictionary<string, IntegerVariable> m_ints = new();
 
-        [SerializeField] 
-        protected SerializedDictionary<string, FloatVariable> m_floats = new();
+        [SerializeField]
+        internal SerializedDictionary<string, FloatVariable> m_floats = new();
 
-        [SerializeField] 
-        protected SerializedDictionary<string, StringVariable> m_strings = new();
+        [SerializeField]
+        internal SerializedDictionary<string, StringVariable> m_strings = new();
 
-        [SerializeField] 
-        protected SerializedDictionary<string, BooleanVariable> m_booleans = new();
+        [SerializeField]
+        internal SerializedDictionary<string, BooleanVariable> m_booleans = new();
 
         /// <summary>
         /// The action gets invoked when this bank gets destroyed.
@@ -352,28 +352,28 @@ namespace com.absence.variablesystem.banksystembase
         /// </summary>
         /// <param name="variableName">Target name.</param>
         /// <returns>True if exists, false otherwise.</returns>
-        public bool HasInt(string variableName) => m_ints.TryGetValue(variableName, out _);
+        public bool HasInt(string variableName) => m_ints.TryGetValue(TrimVariableNameType(variableName), out _);
 
         /// <summary>
         /// Use to check if a floating point variable with the target name exists within this bank.
         /// </summary>
         /// <param name="variableName">Target name.</param>
         /// <returns>True if exists, false otherwise.</returns>
-        public bool HasFloat(string variableName) => m_floats.TryGetValue(variableName, out _);
+        public bool HasFloat(string variableName) => m_floats.TryGetValue(TrimVariableNameType(variableName), out _);
 
         /// <summary>
         /// Use to check if a string variable with the target name exists within this bank.
         /// </summary>
         /// <param name="variableName">Target name.</param>
         /// <returns>True if exists, false otherwise.</returns>
-        public bool HasString(string variableName) => m_strings.TryGetValue(variableName, out _);
+        public bool HasString(string variableName) => m_strings.TryGetValue(TrimVariableNameType(variableName), out _);
 
         /// <summary>
         /// Use to check if a boolean variable with the target name exists within this bank.
         /// </summary>
         /// <param name="variableName">Target name.</param>
         /// <returns>True if exists, false otherwise.</returns>
-        public bool HasBoolean(string variableName) => m_booleans.TryGetValue(variableName, out _);
+        public bool HasBoolean(string variableName) => m_booleans.TryGetValue(TrimVariableNameType(variableName), out _);
 
         /// <summary>
         /// Use to check if a variable with the target name exists within this bank.

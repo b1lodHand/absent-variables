@@ -356,7 +356,9 @@ namespace com.absence.variablesystem.banksystembase.editor
 
             var targetVariableName = targetVarNameProp.stringValue;
 
-            if (targetBank.HasBoolean(targetVariableName) || targetBank.HasString(targetVariableName) || targetVariableName == VariableBank.Null)
+            if (targetBank.HasBoolean(targetVariableName) || 
+                targetBank.HasString(targetVariableName) ||
+                targetVariableName == VariableBank.Null)
             {
                 GUI.enabled = false;
                 setTypeProp.enumValueIndex = (int)(VariableSetterBase.SetType.SetTo);

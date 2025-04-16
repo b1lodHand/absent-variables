@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 
 namespace AYellowpaper.SerializedCollections.KeysGenerators
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class KeyListGeneratorAttribute : Attribute
+    internal class KeyListGeneratorAttribute : Attribute
     {
         public readonly string Name;
         public readonly Type TargetType;

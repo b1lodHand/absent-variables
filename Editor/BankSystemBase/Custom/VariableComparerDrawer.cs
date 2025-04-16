@@ -1,4 +1,4 @@
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
@@ -359,17 +359,51 @@ namespace com.absence.variablesystem.banksystembase.editor
 
             var targetVariableName = targetVarNameProp.stringValue;
 
-            if (targetBank.HasBoolean(targetVariableName) || targetBank.HasString(targetVariableName) || targetVariableName == VariableBank.Null)
+            int enumValueIndex = comparisonProp.enumValueIndex;
+            VariableComparerBase.ComparisonType comparisonType = 
+                (VariableComparerBase.ComparisonType)enumValueIndex;
+
+            if (targetBank.HasBoolean(targetVariableName) || 
+                targetBank.HasString(targetVariableName) || 
+                targetVariableName == VariableBank.Null)
             {
-                GUI.enabled = false;
-                if (comparisonProp.enumValueIndex != (int)VariableComparerBase.ComparisonType.NotEquals)
-                    comparisonProp.enumValueIndex = (int)(VariableComparerBase.ComparisonType.EqualsTo);
-                //comparisonProp.enumValueIndex = (int)(VariableComparerBase.ComparisonType.EqualsTo);
+                bool equalsToEquals = false;
+                string buttonContent;
+
+                if (comparisonType != VariableComparerBase.ComparisonType.NotEquals)
+                {
+                    comparisonType = VariableComparerBase.ComparisonType.EqualsTo;
+                    buttonContent = "=";
+                    equalsToEquals = true;
+                }
+
+                else
+                {
+                    buttonContent = "≠";
+                }
+
+                bool pressed = GUI.Button(setTypeSelectorRect, buttonContent);
+
+                if (pressed)
+                {
+                    if (equalsToEquals)
+                    {
+                        comparisonType = VariableComparerBase.ComparisonType.NotEquals;
+                    }
+
+                    else
+                    {
+                        comparisonType = VariableComparerBase.ComparisonType.EqualsTo;
+                    }
+                }
+
+                comparisonProp.enumValueIndex = (int)comparisonType;
             }
 
-            comparisonProp.enumValueIndex = (int)((VariableComparerBase.ComparisonType)(EditorGUI.EnumPopup(setTypeSelectorRect, (VariableComparerBase.ComparisonType)comparisonProp.enumValueIndex)));
-
-            GUI.enabled = true;
+            else
+            {
+                comparisonProp.enumValueIndex = (int)((VariableComparerBase.ComparisonType)(EditorGUI.EnumPopup(setTypeSelectorRect, (VariableComparerBase.ComparisonType)comparisonProp.enumValueIndex)));
+            }
 
             if (targetBank.HasInt(targetVariableName))
                 intValueProp.intValue = EditorGUI.IntField(actualValueRect, intValueProp.intValue);

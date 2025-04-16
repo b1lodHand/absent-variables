@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections;
 using UnityEngine;
 
 namespace AYellowpaper.SerializedCollections.KeysGenerators
 {
     [KeyListGenerator("Int Range", typeof(int))]
-    public class IntRangeGenerator : KeyListGenerator
+    internal class IntRangeGenerator : KeyListGenerator
     {
         [SerializeField]
         private int _startValue = 1;

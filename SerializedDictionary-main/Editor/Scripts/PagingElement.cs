@@ -1,11 +1,11 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
 namespace AYellowpaper.SerializedCollections.Editor
 {
-    public class PagingElement
+    internal class PagingElement
     {
         public int Page
         {
