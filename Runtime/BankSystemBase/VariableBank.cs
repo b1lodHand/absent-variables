@@ -67,6 +67,58 @@ namespace com.absence.variablesystem.banksystembase
         [SerializeField]
         internal SerializedDictionary<string, BooleanVariable> m_booleans = new();
 
+        public Dictionary<string, IntegerVariable> Ints
+        {
+            get
+            {
+                return m_ints;
+            }
+
+            set
+            {
+                m_ints = (SerializedDictionary<string, IntegerVariable>)value;
+            }
+        }
+
+        public Dictionary<string, FloatVariable> Floats
+        {
+            get
+            {
+                return m_floats;
+            }
+
+            set
+            {
+                m_floats = (SerializedDictionary<string, FloatVariable>)value;
+            }
+        }
+
+        public Dictionary<string, StringVariable> Strings
+        {
+            get
+            {
+                return m_strings;
+            }
+
+            set
+            {
+                m_strings = (SerializedDictionary<string, StringVariable>)value;
+            }
+        }
+
+        public Dictionary<string, BooleanVariable> Booleans
+        {
+            get
+            {
+                return m_booleans;
+            }
+
+            set
+            {
+                m_booleans = (SerializedDictionary<string, BooleanVariable>)value;
+            }
+        }
+
         /// <summary>
         /// The action gets invoked when this bank gets destroyed.
         /// </summary>
