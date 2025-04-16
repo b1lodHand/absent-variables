@@ -1,10 +1,7 @@
 {
-    "name": "com.absence.variablesystem.editor",
-    "rootNamespace": "com.absence.variablesystem.editor",
+    "name": "AYellowpaper.SerializedCollections.Editor",
     "references": [
-        "GUID:6f13bc9fc4dde9a42a625661a793fd37",
-        "GUID:d525ad6bd40672747bde77962f1c401e",
-        "GUID:234340c04eed5674a988bc6ebde7d248"
+        "GUID:d525ad6bd40672747bde77962f1c401e"
     ],
     "includePlatforms": [
         "Editor"

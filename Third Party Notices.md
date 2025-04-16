@@ -1,0 +1,1 @@
+This package contains a modified version of [SerializedDictionary](https://github.com/ayellowpaper/SerializedDictionary) (by AYellowPaper).

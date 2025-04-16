@@ -2,7 +2,8 @@
     "name": "com.absence.variablesystem",
     "rootNamespace": "com.absence.variablesystem",
     "references": [
-        "com.absence.timersystem"
+        "com.absence.timersystem",
+        "AYellowpaper.SerializedCollections"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
