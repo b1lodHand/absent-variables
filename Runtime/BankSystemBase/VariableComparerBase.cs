@@ -31,10 +31,14 @@ namespace com.absence.variablesystem.banksystembase
         [SerializeField] protected string m_stringValue;
         [SerializeField] protected bool m_boolValue;
 
+        [SerializeField] protected VariableBank m_cachedBank;
+
         public virtual bool DontThrowExceptions => false;
         public virtual bool CanUseInEditMode => false;
         public virtual bool ReturnTrueOnException => true;
-
+        public virtual bool BankAsDirectReference => false;
+        public virtual bool CacheBankDirectly => false;
+        
         public string TargetVariableName
         {
             get
@@ -131,7 +135,8 @@ namespace com.absence.variablesystem.banksystembase
                 else throw new Exception("You cannot call GetResult() on comparers outside play mode!");
             }
 
-            IPrimitiveVariableContainer bank = GetRuntimeBank();
+            IPrimitiveVariableContainer bank = CacheBankDirectly ?
+                m_cachedBank : GetRuntimeBank();
 
             return GetResult(bank);
         }
