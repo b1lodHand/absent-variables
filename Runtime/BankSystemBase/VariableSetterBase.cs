@@ -25,17 +25,17 @@ namespace com.absence.variablesystem.banksystembase
         [SerializeField] protected string m_targetBankGuid;
         [SerializeField] protected string m_targetVariableName = VariableBank.Null;
 
-#if UNITY_EDITOR
-        [HideInInspector, SerializeReference] internal VariableEntry m_targetVariableNamePair;
-#endif 
-
         [SerializeField] protected int m_intValue;
         [SerializeField] protected float m_floatValue;
         [SerializeField] protected string m_stringValue;
         [SerializeField] protected bool m_boolValue;
 
+        [SerializeField] protected VariableBank m_cachedBank;
+
         public virtual bool DontThrowExceptions => false;
         public virtual bool CanUseInEditMode => false;
+        public virtual bool BankAsDirectReference => false;
+        public virtual bool CacheBankDirectly => false;
 
         public string TargetVariableName
         {
@@ -132,7 +132,9 @@ namespace com.absence.variablesystem.banksystembase
                 else throw new Exception("You cannot call Perform() on setters outside play mode!");
             }
 
-            IPrimitiveVariableContainer bank = GetRuntimeBank();
+            IPrimitiveVariableContainer bank = CacheBankDirectly ?
+                m_cachedBank : GetRuntimeBank();
+
             Perform(bank);
         }
 
