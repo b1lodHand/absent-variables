@@ -348,7 +348,7 @@ namespace com.absence.variablesystem.banksystembase.editor
                     richText = true,
                 };
 
-                GUI.Box(position, $"<b>Variable Comparer</b> ({property.displayName})", style);
+                GUI.Box(position, $"<b>{Helpers.SplitCamelCase(comparer.GetType().Name, " ")}</b> ({property.displayName})", style);
             }
 
             if (VariableBankDatabase.NoBanks)
@@ -377,6 +377,9 @@ namespace com.absence.variablesystem.banksystembase.editor
                 {
                     VariableBank bank = (VariableBank)
                         EditorGUI.ObjectField(bankSelectorRect, VariableBankDatabase.GetBankIfExists(currentBankGuid), typeof(VariableBank), false);
+
+                    if (comparer.CacheBankDirectly && bank != null && (!bank.ForExternalUse))
+                        Debug.LogWarning("Selected bank for a directly-cached variable manipulator is an internal bank. This might cause reference loss.");
 
                     selectedBankIndex = bank != null ? 
                         VariableBankDatabase.GetIndexOf(bank.Guid) : -1;
@@ -407,7 +410,10 @@ namespace com.absence.variablesystem.banksystembase.editor
 
             if (targetBank == null)
             {
-                EditorGUI.LabelField(position, "Target bank is null.");
+                string message1 = "This setter has a fixed bank. Set 'm_targetBankGuid' to a valid guid.";
+                string message2 = "This setter has a fixed bank. Set 'm_cachedBank' to a valid bank.";
+
+                EditorGUI.LabelField(downRect, comparer.CacheBankDirectly ? message2 : message1);
                 return;
             }
 

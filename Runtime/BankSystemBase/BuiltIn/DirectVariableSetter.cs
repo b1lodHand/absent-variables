@@ -5,7 +5,7 @@ namespace com.absence.variablesystem.banksystembase
     {
         public override bool HasFixedBank => false;
         public override bool BankAsDirectReference => true;
-        public override bool CacheBankDirectly => true;
+        public override bool CacheBankDirectly => false;
 
         protected override IPrimitiveVariableContainer GetRuntimeBank()
         {
