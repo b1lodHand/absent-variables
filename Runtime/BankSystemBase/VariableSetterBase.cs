@@ -23,26 +23,30 @@ namespace com.absence.variablesystem.banksystembase
 
         [SerializeField] protected SetType m_setType = SetType.SetTo;
         [SerializeField] protected string m_targetBankGuid;
-        [SerializeField] protected string m_targetVariableGuid = VariableBank.Null;
+        [SerializeField] protected string m_targetVariableName = VariableBank.Null;
 
         [SerializeField] protected int m_intValue;
         [SerializeField] protected float m_floatValue;
         [SerializeField] protected string m_stringValue;
         [SerializeField] protected bool m_boolValue;
 
+        [SerializeField] protected VariableBank m_cachedBank;
+
         public virtual bool DontThrowExceptions => false;
         public virtual bool CanUseInEditMode => false;
+        public virtual bool BankAsDirectReference => false;
+        public virtual bool CacheBankDirectly => false;
 
-        public string TargetVariableGuid
+        public string TargetVariableName
         {
             get
             {
-                return m_targetVariableGuid;
+                return m_targetVariableName;
             }
 
             set
             {
-                m_targetVariableGuid = value;
+                m_targetVariableName = value;
             }
         }
         public SetType TypeOfSet
@@ -128,7 +132,9 @@ namespace com.absence.variablesystem.banksystembase
                 else throw new Exception("You cannot call Perform() on setters outside play mode!");
             }
 
-            IPrimitiveVariableContainer bank = GetRuntimeBank();
+            IPrimitiveVariableContainer bank = CacheBankDirectly ?
+                m_cachedBank : GetRuntimeBank();
+
             Perform(bank);
         }
 
@@ -140,19 +146,19 @@ namespace com.absence.variablesystem.banksystembase
                 else throw new Exception("Target bank of the variable setter is null.");
             }
 
-            if (TargetVariableGuid == VariableBank.Null)
+            if (m_targetVariableName == VariableBank.Null)
             {
                 if (DontThrowExceptions) return;
                 else throw new Exception("Target variable of the variable setter is null.");
             }
 
-            if (bank.HasInt(TargetVariableGuid))
+            if (bank.HasInt(m_targetVariableName))
                 PerformForInt(bank);
-            else if (bank.HasFloat(TargetVariableGuid))
+            else if (bank.HasFloat(m_targetVariableName))
                 PerformForFloat(bank);
-            else if (bank.HasString(TargetVariableGuid))
+            else if (bank.HasString(m_targetVariableName))
                 PerformForString(bank);
-            else if (bank.HasBoolean(TargetVariableGuid))
+            else if (bank.HasBoolean(m_targetVariableName))
                 PerformForBoolean(bank);
         }
 
@@ -163,10 +169,10 @@ namespace com.absence.variablesystem.banksystembase
         /// <param name="bank">Runtime bank.</param>
         protected virtual void PerformForBoolean(IPrimitiveVariableContainer bank)
         {
-            if (!bank.SetBoolean(TargetVariableGuid, m_boolValue))
+            if (!bank.SetBoolean(m_targetVariableName, m_boolValue))
             {
                 if (DontThrowExceptions) return;
-                else throw new Exception($"Target variable couldn't be found: '{TargetVariableGuid}'");
+                else throw new Exception($"Target variable couldn't be found: '{m_targetVariableName}'");
             }
         }
 
@@ -176,10 +182,10 @@ namespace com.absence.variablesystem.banksystembase
         /// <param name="bank">Runtime bank.</param>
         protected virtual void PerformForString(IPrimitiveVariableContainer bank)
         {
-            if (!bank.SetString(TargetVariableGuid, m_stringValue))
+            if (!bank.SetString(m_targetVariableName, m_stringValue))
             {
                 if (DontThrowExceptions) return;
-                else throw new Exception($"Target variable couldn't be found: '{TargetVariableGuid}'");
+                else throw new Exception($"Target variable couldn't be found: '{m_targetVariableName}'");
             }
         }
 
@@ -189,10 +195,10 @@ namespace com.absence.variablesystem.banksystembase
         /// <param name="bank">Runtime bank.</param>
         protected virtual void PerformForFloat(IPrimitiveVariableContainer bank)
         {
-            if (!bank.TryGetFloat(TargetVariableGuid, out float value))
+            if (!bank.TryGetFloat(m_targetVariableName, out float value))
             {
                 if (DontThrowExceptions) return;
-                else throw new Exception($"Target variable couldn't be found: '{TargetVariableGuid}'");
+                else throw new Exception($"Target variable couldn't be found: '{m_targetVariableName}'");
             }
 
             switch (m_setType)
@@ -216,7 +222,7 @@ namespace com.absence.variablesystem.banksystembase
                     break;
             }
 
-            bank.SetFloat(TargetVariableGuid, value);
+            bank.SetFloat(m_targetVariableName, value);
         }
 
         /// <summary>
@@ -225,10 +231,10 @@ namespace com.absence.variablesystem.banksystembase
         /// <param name="bank">Runtime bank.</param>
         protected virtual void PerformForInt(IPrimitiveVariableContainer bank)
         {
-            if (!bank.TryGetInt(TargetVariableGuid, out int value))
+            if (!bank.TryGetInt(m_targetVariableName, out int value))
             {
                 if (DontThrowExceptions) return;
-                else throw new Exception($"Target variable couldn't be found: '{TargetVariableGuid}'");
+                else throw new Exception($"Target variable couldn't be found: '{m_targetVariableName}'");
             }
 
             switch (m_setType)
@@ -252,7 +258,7 @@ namespace com.absence.variablesystem.banksystembase
                     break;
             }
 
-            bank.SetInt(TargetVariableGuid, value);
+            bank.SetInt(m_targetVariableName, value);
         }
         #endregion
     }

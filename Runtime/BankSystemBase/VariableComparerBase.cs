@@ -24,27 +24,31 @@ namespace com.absence.variablesystem.banksystembase
 
         [SerializeField] protected ComparisonType m_comparisonType = ComparisonType.EqualsTo;
         [SerializeField] protected string m_targetBankGuid;
-        [SerializeField] protected string m_targetVariableGuid = VariableBank.Null;
+        [SerializeField] protected string m_targetVariableName = VariableBank.Null;
 
         [SerializeField] protected int m_intValue;
         [SerializeField] protected float m_floatValue;
         [SerializeField] protected string m_stringValue;
         [SerializeField] protected bool m_boolValue;
 
+        [SerializeField] protected VariableBank m_cachedBank;
+
         public virtual bool DontThrowExceptions => false;
         public virtual bool CanUseInEditMode => false;
         public virtual bool ReturnTrueOnException => true;
-
-        public string TargetVariableGuid
+        public virtual bool BankAsDirectReference => false;
+        public virtual bool CacheBankDirectly => false;
+        
+        public string TargetVariableName
         {
             get
             {
-                return m_targetVariableGuid;
+                return m_targetVariableName;
             }
 
             set
             {
-                m_targetVariableGuid = value;
+                m_targetVariableName = value;
             }
         }
         public ComparisonType TypeOfComparison
@@ -131,7 +135,8 @@ namespace com.absence.variablesystem.banksystembase
                 else throw new Exception("You cannot call GetResult() on comparers outside play mode!");
             }
 
-            IPrimitiveVariableContainer bank = GetRuntimeBank();
+            IPrimitiveVariableContainer bank = CacheBankDirectly ?
+                m_cachedBank : GetRuntimeBank();
 
             return GetResult(bank);
         }
@@ -146,16 +151,16 @@ namespace com.absence.variablesystem.banksystembase
                 else throw new Exception("Target bank of the variable comparer is null.");
             }
 
-            if (TargetVariableGuid == VariableBank.Null)
+            if (m_targetVariableName == VariableBank.Null)
             {
                 if (DontThrowExceptions) return ReturnTrueOnException;
                 else throw new Exception("Target variable of the variable comparer is null.");
             }
 
-            if (bank.TryGetString(TargetVariableGuid, out string stringValue)) result = (stringValue == m_stringValue);
-            else if (bank.TryGetBoolean(TargetVariableGuid, out bool boolValue)) result = (boolValue == m_boolValue);
-            else if (bank.TryGetInt(TargetVariableGuid, out int intValue)) result = CompareNumerics(intValue, m_intValue);
-            else if (bank.TryGetFloat(TargetVariableGuid, out float floatValue)) result = CompareNumerics(floatValue, m_floatValue);
+            if (bank.TryGetString(m_targetVariableName, out string stringValue)) result = (stringValue == m_stringValue);
+            else if (bank.TryGetBoolean(m_targetVariableName, out bool boolValue)) result = (boolValue == m_boolValue);
+            else if (bank.TryGetInt(m_targetVariableName, out int intValue)) result = CompareNumerics(intValue, m_intValue);
+            else if (bank.TryGetFloat(m_targetVariableName, out float floatValue)) result = CompareNumerics(floatValue, m_floatValue);
 
             return result;
         }

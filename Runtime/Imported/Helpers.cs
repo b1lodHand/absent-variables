@@ -64,7 +64,10 @@ Each version is given a distinguishing version number. If the Library as you rec
 If the Library as you received it specifies that a proxy can decide whether future versions of the GNU Lesser General Public License shall apply, that proxy’s public statement of acceptance of any version is permanent authorization for you to choose that version for the Library.
  */
 
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace com.absence.variablesystem.imported
@@ -76,6 +79,22 @@ namespace com.absence.variablesystem.imported
     {
         public const float K_SPACING = 5f;
         public const float K_PADDING = 5f;
+
+        /// <summary>
+        /// Splits input string by capital letters and returns all seperated parts.
+        /// </summary>
+        public static IEnumerable<string> SplitCamelCaseIndividual(string input)
+        {
+            return Regex.Split(input, @"([A-Z]?[a-z]+)").Where(str => !string.IsNullOrEmpty(str));
+        }
+
+        /// <summary>
+        /// Splits input string by capital letters and returns all parts combined with seperator.
+        /// </summary>
+        public static string SplitCamelCase(string input, string seperator)
+        {
+            return String.Join(seperator, SplitCamelCaseIndividual(input));
+        }
 
         /// <summary>
         /// Splits input rect by specified parameters.
