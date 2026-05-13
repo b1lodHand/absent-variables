@@ -15,7 +15,7 @@ namespace com.absence.variablesystem
     [System.Serializable]
     public class Variable<T> : VariableBase
     {
-        [SerializeField] 
+        [field: SerializeField] 
         protected event Action<VariableValueChangedCallbackContext<T>> m_onValueChanged;
 
         [SerializeField] protected T m_underlyingValue;
